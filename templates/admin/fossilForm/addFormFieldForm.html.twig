@@ -1,0 +1,131 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Admin / Edit Form{% endblock %}
+
+{% block cardHeaderText %}
+    Form Feld hinzufügen
+{% endblock %}
+
+{% block cardBodyContent %}
+    {{ form_start(form) }}
+
+    {% if errors is defined %}
+        {% include 'errorMessages.html.twig' with {'errors': errors} %}
+    {% endif %}
+
+    <input type="hidden"
+           id="{{ field_name(form.id) }}"
+           name="{{ field_name(form.id) }}"
+           value="{{ field_value(form.id) }}"
+    />
+
+    <div class="mb-3">
+        {% if form.fieldName.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.fieldName) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.fieldName) }}" class="form-label">{{ form_label(form.fieldName) }}</label>
+        <input type="text"
+               class="form-control"
+               data-database-column-name-helper="true"
+               id="{{ field_name(form.fieldName) }}"
+               name="{{ field_name(form.fieldName) }}"
+               value="{{ field_value(form.fieldName) }}"
+               autocomplete="off"
+        />
+        <div class="form-text">
+            Erlaubte Zeichen sind Buchstaben von "a-z" und "_"
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {% if form.fieldLabel.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.fieldLabel) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.fieldLabel) }}" class="form-label">{{ form_label(form.fieldLabel) }}</label>
+        <input type="text"
+               class="form-control"
+               id="{{ field_name(form.fieldLabel) }}"
+               name="{{ field_name(form.fieldLabel) }}"
+               value="{{ field_value(form.fieldLabel) }}"
+               autocomplete="off"
+        />
+    </div>
+
+    <div class="mb-3">
+        {% if form.fieldType.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.fieldType) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.fieldType) }}" class="form-label">{{ form_label(form.fieldType) }}</label>
+        <select name="{{ field_name(form.fieldType) }}" class="form-control">
+            {% for label, value in field_choices(form.fieldType) %}
+                <option value="{{ value }}"{% if field_value(form.fieldType) == value %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        {% if form.fieldOrder.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.fieldOrder) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.fieldOrder) }}" class="form-label">{{ form_label(form.fieldOrder) }}</label>
+        <input type="number"
+               class="form-control"
+               id="{{ field_name(form.fieldOrder) }}"
+               name="{{ field_name(form.fieldOrder) }}"
+               value="{{ field_value(form.fieldOrder) }}"
+               autocomplete="off"
+        />
+    </div>
+
+    <div class="mb-3">
+        {% if form.fieldType.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.showInOverview) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.showInOverview) }}" class="form-label">{{ form_label(form.showInOverview) }}</label>
+        <select name="{{ field_name(form.showInOverview) }}" class="form-control">
+            {% for label, value in field_choices(form.showInOverview) %}
+                <option value="{{ value }}"{% if field_value(form.showInOverview) == value %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        {% if form.fieldType.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.allowBlank) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.allowBlank) }}" class="form-label">{{ form_label(form.allowBlank) }}</label>
+        <select name="{{ field_name(form.allowBlank) }}" class="form-control">
+            {% for label, value in field_choices(form.allowBlank) %}
+                <option value="{{ value }}"{% if field_value(form.allowBlank) == value %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        {% if form.fieldType.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.isFilter) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.isFilter) }}" class="form-label">{{ form_label(form.isFilter) }}</label>
+        <select name="{{ field_name(form.isFilter) }}" class="form-control">
+            {% for label, value in field_choices(form.isFilter) %}
+                <option value="{{ value }}"{% if field_value(form.isFilter) == value %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {{ form_rest(form) }}
+{% endblock %}

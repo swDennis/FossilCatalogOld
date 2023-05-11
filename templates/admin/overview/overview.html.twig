@@ -1,0 +1,55 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Admin{% endblock %}
+
+{% block cardHeaderText %}
+    Übersicht
+{% endblock %}
+
+{% block cardBodyContent %}
+    <div class="container text-center">
+        <div class="row g-2">
+            <div class="col-6">
+
+                <div class="card">
+                    <div class="card-header">
+                        Fossilien
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Ihre Fossilien-Übersicht</h5>
+                        <p class="card-text">Sie haben {{ fossilCount }} Fossilien in {{ categoryCount }} Kategorien im Katalog.</p>
+
+                        <div>TODO: Show latest fossils</div>
+
+                        <a href="{{ url('app_admin_fossilList') }}" class="btn btn-primary btn-sm">Zur Liste</a>
+                        <a href="{{ url('app_admin_add_fossil') }}" class="btn btn-primary btn-sm">Fossil erstellen</a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-6">
+
+                <div class="card">
+                    <div class="card-header">
+                        Kategorien und Tags
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text">Sie habe {{ categoryCount }} Kategorien</p>
+                        <p class="card-text">Sie habe {{ tagCount }} Tags</p>
+
+                        <a href="{{ url('app_admin_tag_list') }}" class="btn btn-primary btn-sm">Zur Liste</a>
+                        <a href="{{ url('app_admin_tag_create_or_edit') }}" class="btn btn-primary btn-sm">Kategorie / Tag erstellen</a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Details{% endblock %}
+
+ {% block cardHeaderText %}
+     Details <a href="{{ url('app_admin_edit_fossil', {'fossilId': fossil.id}) }}"
+                class="float-end margin-left-ten btn btn-secondary btn">
+                <i class="bi-pencil"></i>
+            </a>
+ {% endblock %}
+
+{% block cardBodyContent %}
+    {% if fossil is empty %}
+        {% include 'admin/fossil/emptyFossil.html.twig' %}
+    {% else %}
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td><b>Kategorie</b></td>
+                    <td>
+                        {% for category in fossil.categories %}
+                            <span class="badge text-bg-secondary"><i class="bi-tag"></i> {{ category.name }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% for fossileFormField in formFields %}
+                <tr>
+                    <td class="fossil-detail-table--first-column"><b>{{ fossileFormField.fieldLabel }}</b></td>
+                    <td>{{ fossil[fossileFormField.fieldName] }}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td><b>Tags</b></td>
+                    <td>
+                        {% for tag in fossil.tags %}
+                            <span class="badge text-bg-secondary"><i class="bi-tag"></i> {{ tag.name }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
+{% block aditionalContent %}
+    {% if fossil is not empty %}
+        <div class="addImageForm margin-top-ten ">
+            <div class="card">
+                <div class="card-header">
+                    {{ form_start(form) }}
+                    <h5>{{ form_label(form.images) }}</h5>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="fossilId" value="{{ fossil.id }}">
+                    <div class="input-group">
+                        {{ form_widget(form.images) }}
+                        {{ form_rest(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if fossil.images is not empty %}
+            <div class="card margin-top-ten">
+                <div class="card-header">
+                    <h5>Bilder</h5>
+                </div>
+                <div class="card-body">
+                    <div class="admin-fossil-detail-image-list container">
+                        <div data-image-gallery="true" class="image-gallery-container">
+                            {% for fossilImage in fossil.images %}
+                                <div class="card text-bg-dark" data-delete-image-id="{{ fossilImage.id }}">
+                                    <a data-image-link="true" href="#" data-imageId="{{ fossilImage.id }}">
+                                        <img src="{{ asset(fossilImage.relativeThumbnailPath) }}"
+                                             class="img-thumbnail card-img-top"
+                                             alt="{{ fossilImage.imageName }}"/>
+                                    </a>
+                                    <div class="card-img-overlay">
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary btn-sm" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi-gear"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{{ url('app_admin_image_delete_image', { 'imageId': fossilImage.id, 'fossilId': fossil.id }) }}"
+                                                       class="dropdown-item delete-image-link link-danger"
+                                                       data-imageId="{{ fossilImage.id }}"
+                                                    >Löschen</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('app_admin_image_set_as_title_image', { 'imageId': fossilImage.id, 'fossilId': fossil.id }) }}"
+                                                       class="dropdown-item set-as-main-image{% if fossilImage.isMainImage %} hidden{% endif %}"
+                                                    >Als Titelbild setzen</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('app_admin_image_show_in_gallery', { 'imageId': fossilImage.id, 'showInGallery': 0 }) }}"
+                                                       class="show-in-gallery-link dropdown-item{% if not fossilImage.showInGallery %} hidden{% endif %}"
+                                                       data-imageIdAdd="{{ fossilImage.id }}"
+                                                    >Aus Galerie entfernen</a>
+
+                                                    <a href="{{ url('app_admin_image_show_in_gallery', { 'imageId': fossilImage.id, 'showInGallery': 1 }) }}"
+                                                       class="show-in-gallery-link dropdown-item{% if fossilImage.showInGallery %} hidden{% endif %}"
+                                                       data-imageIdRemove="{{ fossilImage.id }}"
+                                                    >In Galerie anzeigen</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="image-modal-container">
+            {% include 'admin/fossil/imageModal.html.twig' with {'fossilImages': fossil.images} %}
+        </div>
+    {% endif %}
+{% endblock %}

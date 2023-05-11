@@ -1,0 +1,22 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Import{% endblock %}
+
+{% block cardHeaderText %}
+    Daten Importieren
+{% endblock %}
+
+{% block cardBodyContent %}
+    <div class="container">
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.import) }}
+            {{ form_widget(form.import) }}
+        </div>
+        {{ form_rest(form) }}
+    </div>
+{% endblock %}
+
+{% block aditionalContent %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Admin / Liste{% endblock %}
+
+{% block cardHeaderText %}
+    Fossilien <a href="{{ url('app_admin_add_fossil') }}" class="btn btn-primary float-end">Fossil hinzufügen</a>
+{% endblock %}
+
+{% block cardBodyContent %}
+    {% if fossilList is empty and not hasFossils %}
+        {% include 'admin/fossil/noFossils.html.twig' %}
+    {% else %}
+        {% block filter %}
+            {% include 'admin/base/filter/filter.html.twig' %}
+        {% endblock %}
+
+        {% if fossilList is empty and hasFossils %}
+            {% include 'admin/fossil/emptyFossilList.html.twig' %}
+        {% else %}
+            {% block paginationTop %}
+                {% include 'admin/base/pagination/pagination.html.twig' %}
+            {% endblock %}
+
+            {% include 'admin/base/fossilTable.html.twig' with {'formFields': formFields, 'fossilList': fossilList} %}
+
+            {% block paginationBottom %}
+                {% include 'admin/base/pagination/pagination.html.twig' %}
+            {% endblock %}
+
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

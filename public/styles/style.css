@@ -1,0 +1,98 @@
+.overlaySpinner {
+    vertical-align: middle;
+    text-align: center;
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    display: block;
+    min-height: 100%;
+    min-width: 100%;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.overlaySpinner:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.overlaySpinner .spinner-border.spinner-border-sm {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.hidden {
+    display: none;
+}
+
+.spacer {
+    width: 20px;
+}
+
+.margin-left-ten {
+    margin-left: 10px;
+}
+
+.margin-top-ten {
+    margin-top: 10px;
+}
+
+.float-left {
+    float: left;
+}
+
+.fit {
+    max-width: 99%;
+    max-height: 99%;
+}
+
+.card-header {
+    height: 55px;
+}
+
+.boolean-column-icon-badge {
+    font-size: 1.1rem;
+}
+
+.autocomplete-search-list {
+    position: absolute;
+    margin-top: 5px;
+    display: none;
+    background: #FFFFFF;
+    border-bottom: 1px solid darkgray;
+    border-left: 1px solid darkgray;
+    border-right: 1px solid darkgray;
+}
+
+.autocomplete-search-list div {
+    padding: 2px;
+}
+
+.autocomplete-search-list div:hover {
+    background: #eff6ff;
+    cursor: pointer;
+}
+
+.autocomplete-search-list div.active {
+    background: #eff6ff;
+}
+
+.fossil-filter .accordion-item .accordion-collapse .container .row {
+    margin-bottom: 5px;
+}
+
+
+
+
+
+

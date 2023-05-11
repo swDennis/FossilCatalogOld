@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Fossilien{% endblock %}</title>
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="{{ asset('styles/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap-icons-1.10.5/font/bootstrap-icons.css') }}">
+
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/nav-bar.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/fossil-detail.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/form-field.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/loading-indicator.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/toast.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/modal.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/image-modal.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/fossil-list.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/tag-list.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/export.css') }}">
+    {% endblock %}
+
+    <!-- Bootstrap script -->
+    <script type="application/javascript" src="{{ asset('javascripts/Bootstrap.js') }}"></script>
+
+    {% block javascripts %}
+        <script type="application/javascript" src="{{ asset('javascripts/Ajax.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/LoadingIndicator.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/SetLoading.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/Toast.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/Modal.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/FormFieldDelete.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/colophonetics.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/Autocomplete.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/SubmitButtonDoubleClick.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/DatabaseColumnNameHelper.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/ImageModal.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/ImageShowInGallery.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/ImageIsMainImage.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/DeleteImage.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/FossilDelete.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/TagDelete.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/Pagination.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/TagLoader.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/Export.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/Import.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('javascripts/ZipExport.js') }}"></script>
+
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    <a href="{{ url('app_admin') }}" class="btn-secondary">login</a>
+{% endblock %}
+
+    <div class="element-loading-indicator hidden">
+
+        <span role="status">Loading...</span>
+    </div>
+
+    <div class="page-loading-indicator">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <template id="toast-template-item">
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto toast-title"></strong>
+                    <button type="button" class="btn-close toast-close-button" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body toast-content">
+
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <div id="modal-template-container" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button id="closeButton" type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-content"></p>
+                    <input type="text" name="confirmInput" class="form-control hidden"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="yesButton btn btn-primary hidden">Ja</button>
+                    <button type="button" class="noButton btn btn-secondary hidden" data-dismiss="modal">Nein</button>
+                    <button type="button" class="okButton btn btn-primary hidden" data-dismiss="modal">OK</button>
+                    <button type="button" class="cancelButton btn btn-secondary hidden" data-dismiss="modal">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

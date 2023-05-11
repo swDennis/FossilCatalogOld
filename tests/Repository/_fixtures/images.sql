@@ -1,0 +1,16 @@
+INSERT INTO image (fossilId, originalName, mimeType, imagePath, thumbnailPath, showInGallery, isMainImage) VALUES
+(1, 'foo1', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(1, 'foo2', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(1, 'foo3', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(2, 'foo4', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(2, 'foo5', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(2, 'foo6', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(3, 'foo7', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(3, 'foo8', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(3, 'foo9', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(4, 'foo10', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(4, 'foo11', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(4, 'foo12', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(5, 'foo13', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(5, 'foo14', 'png', 'anyPath', 'anyThumbNailPath', false, false),
+(5, 'foo15', 'png', 'anyPath', 'anyThumbNailPath', false, false);

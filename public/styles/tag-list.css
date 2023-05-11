@@ -1,0 +1,11 @@
+.action-column {
+    width: 110px;
+}
+
+.is-category-column {
+    width: 120px;
+}
+
+.tag-list-table tbody tr td {
+    vertical-align: middle;
+}

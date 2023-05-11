@@ -1,0 +1,15 @@
+.image-modal .modal-body {
+    align-content: center;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    background: #000000;
+}
+
+.image-modal .modal-body img {
+    max-height: 98%;
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
