@@ -2,6 +2,10 @@ var Import = function() {
     this.progressBars = document.querySelectorAll(this.progressBarSelector);
     this.button = document.querySelector(this.importButtonSelector);
 
+    if (!this.button) {
+        return;
+    }
+
     this.registerEvents();
 };
 
