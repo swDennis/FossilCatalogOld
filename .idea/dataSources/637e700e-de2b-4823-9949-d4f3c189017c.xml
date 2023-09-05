@@ -777,8 +777,8 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </collation>
     <schema id="224" parent="1" name="fossils">
       <Current>1</Current>
-      <IntrospectionTimestamp>2023-09-05.12:09:07</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-09-05.10:09:07</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2023-09-05.22:30:55</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-09-05.20:30:55</LocalIntrospectionTimestamp>
       <CollationName>latin1_swedish_ci</CollationName>
     </schema>
     <schema id="225" parent="1" name="information_schema">
@@ -832,7 +832,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
     <column id="240" parent="233" name="id">
-      <AutoIncrement>10001</AutoIncrement>
+      <AutoIncrement>1</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
