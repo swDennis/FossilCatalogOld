@@ -18,8 +18,6 @@ Import.prototype.registerEvents = function () {
     this.button.addEventListener('click', this.onClickButton.bind(this));
 };
 
-
-
 Import.prototype.onClickButton = function(event) {
     event.preventDefault();
 
