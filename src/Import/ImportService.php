@@ -2,9 +2,9 @@
 
 namespace App\Import;
 
-use App\Export\Handler\AbstractHandler;
 use App\Import\Handler\ImportCategoryHandler;
 use App\Import\Handler\ImportFossilFormFieldHandler;
+use App\Import\Handler\ImportFossilHandler;
 use App\Import\Handler\ImportImagesHandler;
 use App\Import\Handler\ImportTagCategoryRelationHandler;
 use App\Import\Handler\ImportTagHandler;
@@ -18,7 +18,8 @@ class ImportService implements ImportServiceInterface
         private readonly ImportCategoryHandler $importCategoryHandler,
         private readonly ImportTagCategoryRelationHandler $tagCategoryRelationHandler,
         private readonly ImportFossilFormFieldHandler $fossilFormFieldHandler,
-        private readonly ImportImagesHandler $importImagesHandler
+        private readonly ImportImagesHandler $importImagesHandler,
+        private readonly ImportFossilHandler $importFossilHandler
     ) {
         $this->handler = [
             $this->importTagHandler,
@@ -26,6 +27,7 @@ class ImportService implements ImportServiceInterface
             $this->tagCategoryRelationHandler,
             $this->fossilFormFieldHandler,
             $this->importImagesHandler,
+            $this->importFossilHandler,
         ];
     }
 
