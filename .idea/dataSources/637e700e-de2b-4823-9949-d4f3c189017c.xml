@@ -777,8 +777,8 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </collation>
     <schema id="224" parent="1" name="fossils">
       <Current>1</Current>
-      <IntrospectionTimestamp>2023-09-05.22:45:27</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-09-05.20:45:27</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2023-09-05.22:57:28</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-09-05.20:57:28</LocalIntrospectionTimestamp>
       <CollationName>latin1_swedish_ci</CollationName>
     </schema>
     <schema id="225" parent="1" name="information_schema">

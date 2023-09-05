@@ -88,7 +88,7 @@ class ImportImagesHandler extends AbstractImportHandler
     private function copyImages(Image $image): void
     {
         $imageBasePath = str_replace('/' . $this->getFileName(), '', $this->status->getFile());
-        $imageTargetBasePath = $this->appKernel->getProjectDir();
+        $imageTargetBasePath = $this->appKernel->getProjectDir() . '/public';
         $imageRelativePath = str_replace('images/', '', $image->getRelativeImagePath());
         $thumbnailRelativePath = str_replace('images/', '', $image->getRelativeThumbnailPath());
 
