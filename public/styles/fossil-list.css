@@ -1,0 +1,26 @@
+.fossil-list-table tbody tr td {
+    vertical-align: middle;
+}
+
+.list-image {
+    width: 90px;
+    height: 90px;
+}
+
+.fossil-list-action-column {
+    max-width: 165px;
+    min-width: 165px;
+    width: 165px;
+}
+
+.fossil-list-image-column {
+    max-width: 70px;
+}
+
+.fossil-list-pagination .pagination {
+    margin-top: 10px;
+}
+
+.empty-fossil-search {
+    margin-top: 20px;
+}

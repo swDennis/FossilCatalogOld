@@ -1,0 +1,59 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Admin / Tag|Category / Edit{% endblock %}
+
+{% block cardHeaderText %}
+    Kategorie oder Tag hinzufügen / bearbeiten
+{% endblock %}
+
+{% block cardBodyContent %}
+    {{ form_start(form) }}
+
+    {% if errors is defined %}
+        {% include 'errorMessages.html.twig' with {'errors': errors} %}
+    {% endif %}
+
+    <input type="hidden"
+           id="{{ field_name(form.id) }}"
+           name="{{ field_name(form.id) }}"
+           value="{{ field_value(form.id) }}"
+    />
+
+    <div class="mb-3">
+        {% if form.name.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.name) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.name) }}" class="form-label">{{ form_label(form.name) }}</label>
+        <input type="text"
+               class="form-control"
+               id="{{ field_name(form.name) }}"
+               name="{{ field_name(form.name) }}"
+               value="{{ field_value(form.name) }}"
+               autocomplete="off"
+        />
+        <div class="form-text">
+            Jeder Kategorie und Tag name darf nur einmalig vorkommen.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {% if form.isUsedAsCategory.vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form.isUsedAsCategory) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form.isUsedAsCategory) }}" class="form-label">{{ form_label(form.isUsedAsCategory) }}</label>
+        <select name="{{ field_name(form.isUsedAsCategory) }}" class="form-control">
+            {% for label, value in field_choices(form.isUsedAsCategory) %}
+                <option value="{{ value }}"{% if field_value(form.isUsedAsCategory) == value %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <div class="form-text">
+            Wenn Tags als Kategorie gekennzeichnet sind, werden sie in der Galerie als Kategorie angezeigt.
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+{% endblock %}

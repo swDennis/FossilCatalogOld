@@ -1,0 +1,93 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Export{% endblock %}
+
+{% block cardHeaderText %}
+    Daten Exportieren
+{% endblock %}
+
+{% block cardBodyContent %}
+    <div class="container">
+        <div class="row align-items-start">
+
+            <div class="col col-3 p-3 mb-2">
+                <button class="btn btn-primary"
+                        id="exportButton"
+                        data-url="{{ url('app_admin_export') }}"
+                        data-clearUrl="{{ url('app_admin_export_clear') }}">
+                    Daten exportieren
+                </button>
+            </div>
+
+            <div class="col p-3 pt-2 mb-2">
+                {% for status in data %}
+                    <div class="mb-2">
+                        {% if status.type == 'tagStatus' %}
+                            <label>Tags</label>
+                        {% elseif status.type == 'categoryStatus' %}
+                            <label>Kategorien</label>
+                        {% elseif status.type == 'fossilFormFieldStatus' %}
+                            <label>Formularfelder</label>
+                        {% elseif status.type == 'imageStatus' %}
+                            <label>Bilder</label>
+                        {% elseif status.type == 'tagCategoryRelationStatus' %}
+                            <label>Relationen</label>
+                        {% elseif status.type == 'fossilStatus' %}
+                            <label>Fossilien</label>
+                        {% endif %}
+                        <div class="progress mt-1" role="progressbar" aria-label="Animated striped example"
+                             aria-valuenow="0"
+                             aria-valuemin="{{ status.exported }}" aria-valuemax="{{ status.toExport }}">
+                            <div data-type="{{ status.type }}"
+                                 class="progress-bar progress-bar-striped progress-bar-animated"
+                                 style="width: 0%"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block aditionalContent %}
+    <div class="mt-3">
+        {% if exports is empty %}
+            {% include 'admin/Export/noExportsFound.html.twig' %}
+        {% else %}
+            <div class="card">
+                <div class="card-header">
+                    <h5>Exporte</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped export-table">
+                        <thead>
+                        <tr>
+                            <th class="w-25" scope="col">Erstellt am</th>
+                            <th class="w-25" scope="col">Ist komplett</th>
+                            <th class="w-auto" scope="col"></th>
+                            <th class="export-action-column" scope="col">Aktion</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for export in exports %}
+                            <tr>
+                                <td>{{ export.name }}</td>
+                                <td>{% include 'admin/base/booleanColumnRenderer.html.twig' with {'value': export.hasFinished } %}</td>
+                                <td></td>
+                                <td class="export-action-column">
+                                    <a href="{{ url('app_admin_export_zip', {'directory': export.realPath, 'name': export.name}) }}"
+                                       data-downloadButton="true"
+                                       data-downloadUrl="{{ url('app_admin_download_zip') }}"
+                                       class="float-left btn btn-primary btn">
+                                        <i class="bi-download"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

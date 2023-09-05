@@ -1,0 +1,62 @@
+<form name="filter" action="{{ url('app_admin_fossilList') }}">
+    <div class="accordion fossil-filter" id="fossil-filter">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button{% if not hasActiveFilter %} collapsed{% endif %}"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#filterCollapse"
+                        aria-expanded="{% if hasActiveFilter %}true{% else %}false{% endif %}"
+                        aria-controls="filterCollapse">
+                    Suche
+                </button>
+            </h2>
+            <div id="filterCollapse" class="accordion-collapse collapse{% if hasActiveFilter %} show{% endif %}">
+                <input type="hidden" name="page" value="1">
+
+                <div class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col input-group">
+                                <input class="form-control" name="searchTerm" type="search"
+                                       value="{% if filters.searchTerm %}{{ filters.searchTerm }}{% endif %}"
+                                       placeholder="Suchbegriff"
+                                       aria-label="Suchbegriff">
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="categories" class="form-label">Kategorien</label>
+                                <select id="categories" name="categories[]" class="form-select" data-isTagField="true"
+                                        data-url="{{ url('app_admin_tag_load_available') }}" multiple>
+                                    <option value="0">Keine</option>
+                                    {% for categorie in filters.availableCategories %}
+                                        <option value="{{ categorie.id }}"{% if categorie.id in filters.selectedCategories %} selected{% endif %}>{{ categorie.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <label for="tags" class="form-label">Tags</label>
+                                <select id="tags" name="tags[]" class="form-select" data-isTagField="true"
+                                        data-url="{{ url('app_admin_tag_load_available') }}" multiple>
+                                    <option value="0">Keine</option>
+                                    {% for tag in filters.availableTags %}
+                                        <option value="{{ tag.id }}"{% if tag.id in filters.selectedTags %} selected{% endif %}>{{ tag.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="submit" value="Suchen" class="btn btn-primary float-end"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,62 @@
+{% if type == 'text' %}
+    <div class="mb-3">
+        {% if form[formField.fieldName].vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form[formField.fieldName]) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form[formField.fieldName]) }}"
+               class="form-label">{{ form_label(form[formField.fieldName]) }}</label>
+        <input type="text"
+               class="form-control"
+               id="{{ field_name(form[formField.fieldName]) }}"
+               name="{{ field_name(form[formField.fieldName]) }}"
+               value="{{ field_value(form[formField.fieldName]) }}"
+               autocomplete="off"
+        />
+    </div>
+{% elseif type == 'textarea' %}
+    <div class="mb-3">
+        {% if form[formField.fieldName].vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form[formField.fieldName]) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form[formField.fieldName]) }}"
+               class="form-label">{{ form_label(form[formField.fieldName]) }}</label>
+        <textarea class="form-control"
+                  id="{{ field_name(form[formField.fieldName]) }}"
+                  name="{{ field_name(form[formField.fieldName]) }}"
+                  rows="3">{{ field_value(form[formField.fieldName]) }}</textarea>
+    </div>
+{% elseif type == 'number' %}
+    <div class="mb-3">
+        {% if form[formField.fieldName].vars.errors|length %}
+            <div class="form-error alert alert-danger" role="alert">
+                {{ form_errors(form[formField.fieldName]) }}
+            </div>
+        {% endif %}
+        <label for="{{ field_name(form[formField.fieldName]) }}"
+               class="form-label">{{ form_label(form[formField.fieldName]) }}</label>
+        <input type="text"
+               class="form-control"
+               id="{{ field_name(form[formField.fieldName]) }}"
+               name="{{ field_name(form[formField.fieldName]) }}"
+               value="{{ field_value(form[formField.fieldName]) }}"
+               autocomplete="off"
+        />
+    </div>
+{% elseif type == 'date' %}
+    <div class="mb-3">
+        <label for="{{ field_name(form[formField.fieldName]) }}"
+               class="form-label">{{ form_label(form[formField.fieldName]) }}</label>
+        <input type="date"
+               class="form-control"
+               id="{{ field_name(form[formField.fieldName]) }}"
+               name="{{ field_name(form[formField.fieldName]) }}"
+               value="{{ field_value(form[formField.fieldName]) }}"
+        >
+    </div>
+{% else %}
+    <b>Form field type: " {{ type }}" not found</b>
+{% endif %}

@@ -1,0 +1,54 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Import{% endblock %}
+
+{% block cardHeaderText %}
+    Daten Importieren
+{% endblock %}
+
+{% block cardBodyContent %}
+    <div class="container">
+        <div class="row align-items-start">
+
+            <div class="col col-3 p-3 mb-2">
+                <button class="btn btn-primary"
+                        id="importButton"
+                        data-url="{{ url('app_admin_import_execution') }}"
+                        data-clearUrl="{{ url('app_admin_import_clear') }}">
+                    Daten importieren
+                </button>
+            </div>
+
+            <div class="col p-3 pt-2 mb-2">
+                {% for status in data %}
+                    <div class="mb-2">
+                        {% if status.type == 'tagStatus' %}
+                            <label>Tags</label>
+                        {% elseif status.type == 'categoryStatus' %}
+                            <label>Kategorien</label>
+                        {% elseif status.type == 'fossilFormFieldStatus' %}
+                            <label>Formularfelder</label>
+                        {% elseif status.type == 'imageStatus' %}
+                            <label>Bilder</label>
+                        {% elseif status.type == 'tagCategoryRelationStatus' %}
+                            <label>Relationen</label>
+                        {% elseif status.type == 'fossilStatus' %}
+                            <label>Fossilien</label>
+                        {% endif %}
+                        <div class="progress mt-1" role="progressbar" aria-label="Animated striped example"
+                             aria-valuenow="0"
+                             aria-valuemin="{{ status.imported }}" aria-valuemax="{{ status.toImport }}">
+                            <div data-type="{{ status.type }}"
+                                 class="progress-bar progress-bar-striped progress-bar-animated"
+                                 style="width: 0%"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block aditionalContent %}
+
+{% endblock %}

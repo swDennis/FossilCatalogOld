@@ -1,0 +1,68 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossils / Admin / Edit Form{% endblock %}
+
+{% block cardHeaderText %}
+    Formular bearbeiten
+    <a href="{{ url('app_admin_settings_edit_form_add_field') }}" class="btn btn-primary btn float-end">
+        <i class="bi-plus-lg"></i>
+    </a>
+{% endblock %}
+
+{% block cardBodyContent %}
+    <table class="table table-striped table-hover form-field-list-table">
+        <thead>
+        <tr>
+            <th scope="col">Reihenfolge</th>
+            <th scope="col">Eingabefeld Name</th>
+            <th scope="col">Eingabefeld Anzeigename</th>
+            <th scope="col">Typ</th>
+            <th scope="col">In Übersicht</th>
+            <th scope="col">Leer</th>
+            <th scope="col">Filter</th>
+            <th scope="col">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for formField in formFieldList %}
+            <tr class="form-field-row">
+                <td>
+                    {{ formField.fieldOrder }}
+                </td>
+                <td>
+                    {{ formField.fieldName }}
+                </td>
+                <td>
+                    {{ formField.fieldLabel }}
+                </td>
+                <td>
+                    {{ formField.fieldType }}
+                </td>
+                <td class="text-center">
+                    {% include 'admin/base/booleanColumnRenderer.html.twig' with {'value': formField.showInOverview} %}
+                </td>
+                <td class="text-center">
+                    {% include 'admin/base/booleanColumnRenderer.html.twig' with {'value': formField.allowBlank} %}
+                </td>
+                <td class="text-center">
+                    {% include 'admin/base/booleanColumnRenderer.html.twig' with {'value': formField.isFilter} %}
+                </td>
+                <td>
+                        <a href="{{ url('app_admin_settings_edit_form_add_field_edit', {'formFieldId': formField.id }) }}"
+                           class="float-left btn btn-secondary">
+                            <i class="bi-pen"></i>
+                        </a>
+
+                        <a href="{{ url('app_admin_settings_edit_form_add_field_delete', {'formFieldId': formField.id }) }}"
+                           class="float-left margin-left-ten btn btn-danger btn{% if formField.isRequiredDefault %} disabled{% endif %}"
+                            data-delete-form-field="true">
+                            <i class="bi-trash"></i>
+                        </a>
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include 'admin/base/modal/conformModal.html.twig' %}
+{% endblock %}

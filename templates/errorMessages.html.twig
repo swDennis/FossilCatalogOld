@@ -1,0 +1,18 @@
+{% block error_messages %}
+    {% if errors is defined %}
+        <div class="alert alert-danger" role="alert">
+            {% if errors.errorMessage is defined %}
+                <p>{{ errors.errorMessage }}</p>
+            {% endif %}
+            {% if errors.errorTrace is defined %}
+                <p>{{ errors.errorTrace }}</p>
+            {% endif %}
+            {% if errors.previousErrorMessage is defined %}
+                <p>{{ errors.previousErrorMessage }}</p>
+            {% endif %}
+            {% if errors.previousErrorTrace is defined %}
+                <p>{{ errors.previousErrorTrace }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

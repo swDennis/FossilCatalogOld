@@ -1,0 +1,93 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Fossilien / Installation{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {{ form_start(form) }}
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Willkommen bei Fossilien</h1>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Sammeln von Informationen zur Installation der Fossil-Anwendung.</h3>
+                <h5 class="card-title">Informationen zu Ihrer Datenbank</h5>
+
+                {% if errors is defined %}
+                    {% include 'errorMessages.html.twig' with {'errors': errors} %}
+                {% endif %}
+
+                <div class="mb-3">
+                    {% if form.databaseName.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.databaseName) }}
+                        </div>
+                    {% endif %}
+                    <label for="databaseName" class="form-label">{{ form_label(form.databaseName) }}</label>
+                    <input type="text" class="form-control" id="databaseName"
+                           name="{{ field_name(form.databaseName) }}"
+                           value="{{ field_value(form.databaseName) }}"
+                           placeholder="{{ field_label(form.databaseName) }}"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    {% if form.databaseUsername.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.databaseUsername) }}
+                        </div>
+                    {% endif %}
+                    <label for="databaseUsername" class="form-label">{{ form_label(form.databaseUsername) }}</label>
+                    <input type="text" class="form-control" id="databaseUsername"
+                           name="{{ field_name(form.databaseUsername) }}"
+                           value="{{ field_value(form.databaseUsername) }}"
+                           placeholder="root"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    {% if form.databasePassword.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.databasePassword) }}
+                        </div>
+                    {% endif %}
+                    <label for="databasePassword" class="form-label">{{ form_label(form.databasePassword) }}</label>
+                    <input type="password" class="form-control" id="databasePassword"
+                           name="{{ field_name(form.databasePassword) }}"
+                           value="{{ field_value(form.databasePassword) }}"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    {% if form.databaseHost.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.databaseHost) }}
+                        </div>
+                    {% endif %}
+                    <label for="databaseHost" class="form-label">{{ form_label(form.databaseHost) }}</label>
+                    <input type="text" class="form-control" id="databaseHost"
+                           name="{{ field_name(form.databaseHost) }}"
+                           value="{{ field_value(form.databaseHost) }}"
+                           placeholder="localhost"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    {% if form.databasePort.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.databasePort) }}
+                        </div>
+                    {% endif %}
+                    <label for="databasePort" class="form-label">{{ form_label(form.databasePort) }}</label>
+                    <input type="text" class="form-control" id="databasePort"
+                           name="{{ field_name(form.databasePort) }}"
+                           value="{{ field_value(form.databasePort) }}"
+                           placeholder="3306"
+                    />
+                </div>
+
+                {{ form_rest(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Fossilien / Installation{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {{ form_start(form) }}
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Willkommen bei Fossilien</h1>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">Sammeln von Informationen zur Installation der Fossil-Anwendung.</h3>
+                <h5 class="card-title">Information für ihren Login</h5>
+
+                {% if errors is defined %}
+                    {% include 'errorMessages.html.twig' with {'errors': errors} %}
+                {% endif %}
+
+                <div class="mb-3">
+                    {% if form.email.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.email) }}
+                        </div>
+                    {% endif %}
+                    <label for="email" class="form-label">{{ form_label(form.email) }}</label>
+                    <input type="text" class="form-control" id="email"
+                           name="{{ field_name(form.email) }}"
+                           value="{{ field_value(form.email) }}"
+                           placeholder="{{ field_label(form.email) }}"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    {% if form.password.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.password) }}
+                        </div>
+                    {% endif %}
+                    <label for="password" class="form-label">{{ form_label(form.password) }}</label>
+                    <input type="password" class="form-control" id="password"
+                           name="{{ field_name(form.password) }}"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    {% if form.passwordConfirm.vars.errors|length %}
+                        <div class="form-error alert alert-danger" role="alert">
+                            {{ form_errors(form.passwordConfirm) }}
+                        </div>
+                    {% endif %}
+                    <label for="passwordConfirm" class="form-label">{{ form_label(form.passwordConfirm) }}</label>
+                    <input type="password" class="form-control" id="passwordConfirm"
+                           name="{{ field_name(form.passwordConfirm) }}"
+                    />
+                </div>
+
+                {{ form_rest(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

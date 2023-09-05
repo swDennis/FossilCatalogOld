@@ -1,0 +1,43 @@
+{% extends 'admin/base/base.html.twig' %}
+
+{% block title %}Fossilien / Admin / Fossil hinzufügen{% endblock %}
+
+{% block cardHeaderText %}
+    Fossil hinzufügen
+{% endblock %}
+
+{% block cardBodyContent %}
+    {{ form_start(form) }}
+    <h5 class="card-title">Fügen Sie ihr neues Fossil hinzu</h5>
+
+    {% if errors is defined %}
+        {% include 'errorMessages.html.twig' with {'errors': errors} %}
+    {% endif %}
+
+    {% include 'admin/base/multiselectField.html.twig' with {
+        'errors': form_errors(form.categories),
+        'fieldLabel': form.categories.vars.label,
+        'fieldName': field_name(form.categories),
+        'fieldValues': field_value(form.categories),
+        'choiceList': field_choices(form.categories)} %}
+
+    {% for formField in formFields %}
+        {% include 'admin/fossil/switch.html.twig' with {'type': formField.fieldType, 'form': form, 'formField': formField} %}
+    {% endfor %}
+
+    {% include 'admin/base/multiselectField.html.twig' with {
+        'errors': form_errors(form.tags),
+        'fieldLabel': form.tags.vars.label,
+        'fieldName': field_name(form.tags),
+        'fieldValues': field_value(form.tags),
+        'choiceList': field_choices(form.tags)} %}
+
+    <div class="mb-3">
+        {{ form_label(form.images) }}
+        {{ form_widget(form.images) }}
+    </div>
+
+    <input type="hidden" name="{{ field_name(form.id) }}" value="{{ field_value(form.id) }}">
+
+    {{ form_rest(form) }}
+{% endblock %}

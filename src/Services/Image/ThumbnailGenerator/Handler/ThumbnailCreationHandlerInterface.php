@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Services\Image\ThumbnailGenerator\Handler;
+
+interface ThumbnailCreationHandlerInterface
+{
+    public const THUMBNAIL_WIDTH = 200;
+
+    public const MIMETYPE_JPG = 'image/jpeg';
+
+    public const MIMETYPE_PNG = 'image/png';
+
+    public function supports(string $mimeType): bool;
+
+    public function create(string $imageSourcePath, string $thumbnailTargetPath): void;
+}
