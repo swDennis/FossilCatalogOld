@@ -86,7 +86,7 @@ class ImageRepository implements ImageRepositoryInterface, RepositoryInterface
             ->select(['*'])
             ->from(self::IMAGE_TABLE_NAME)
             ->where('fossilId IN (:fossilId)')
-            ->orderBy('isMainImage', 'ASC')
+            ->orderBy('isMainImage', 'DESC')
             ->setParameter('fossilId', $ids, ArrayParameterType::INTEGER)
             ->executeQuery()
             ->fetchAllAssociativeIndexed();
