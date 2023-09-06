@@ -48,19 +48,8 @@ class ImportFossilHandler extends AbstractImportHandler
                 break;
             }
 
-            $array = explode(',', $line);
-            $fossilArray = [
-                'id' => $array[0],
-            ];
-
-            $index = 1;
-            foreach ($fields as $field) {
-                $fossilArray[$field['fieldName']] = $array[$index];
-                ++$index;
-            }
-
             $fossil = new FossilEntity();
-            $fossil->fromArray($fossilArray);
+            $fossil->fromArray(json_decode($line, true));
 
             $this->fossilRepository->saveFossil($fossil, true);
 
