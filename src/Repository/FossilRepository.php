@@ -10,8 +10,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
 {
-
-
     public function __construct(
         private readonly Connection $connection,
         private readonly FilterQueryQueryFactory $filterFactory,
