@@ -5,13 +5,19 @@ namespace App\Import\Handler;
 use App\Entity\FossilFormField;
 use App\Import\ImportStatus;
 use App\Repository\FossilFormFieldRepositoryInterface;
+use App\Services\FossilForm\FossilFormEntityCreator;
+use App\Services\FossilForm\FossilFormEntityDatabaseCreator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ImportFossilFormFieldHandler extends AbstractImportHandler
 {
+    public const IMPORT_LIMIT = PHP_INT_MAX;
+
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly FossilFormFieldRepositoryInterface $fossilFormFieldRepository
+        private readonly FossilFormFieldRepositoryInterface $fossilFormFieldRepository,
+        private readonly FossilFormEntityCreator $fossilFormEntityCreator,
+        private readonly FossilFormEntityDatabaseCreator $fossilFormEntityDatabaseCreator
     ) {
         parent::__construct($this->requestStack);
     }
@@ -31,11 +37,6 @@ class ImportFossilFormFieldHandler extends AbstractImportHandler
         $this->status = $this->getStatusFromSession();
 
         $file = fopen($this->status->getFile(), 'rb');
-
-        $offset = $this->status->getImported();
-        for ($i = 0; $i < $offset; $i++) {
-            fgets($file);
-        }
 
         $lineCounter = 0;
         for ($i = 0; $i < self::IMPORT_LIMIT; $i++) {
@@ -71,6 +72,9 @@ class ImportFossilFormFieldHandler extends AbstractImportHandler
         if ($this->status->getImported() >= $this->status->getToImport()) {
             $this->status->finish();
         }
+
+        $this->fossilFormEntityCreator->createFossilFormEntity();
+        $this->fossilFormEntityDatabaseCreator->addDatabaseColumns();
 
         $this->saveSession();
 

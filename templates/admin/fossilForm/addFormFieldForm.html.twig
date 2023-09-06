@@ -33,6 +33,7 @@
                name="{{ field_name(form.fieldName) }}"
                value="{{ field_value(form.fieldName) }}"
                autocomplete="off"
+               {% if isFormFieldEdit %} disabled="disabled"{% endif %}
         />
         <div class="form-text">
             Erlaubte Zeichen sind Buchstaben von "a-z" und "_"
@@ -62,7 +63,7 @@
             </div>
         {% endif %}
         <label for="{{ field_name(form.fieldType) }}" class="form-label">{{ form_label(form.fieldType) }}</label>
-        <select name="{{ field_name(form.fieldType) }}" class="form-control">
+        <select name="{{ field_name(form.fieldType) }}" class="form-control"{% if isFormFieldEdit %} disabled="disabled"{% endif %}>
             {% for label, value in field_choices(form.fieldType) %}
                 <option value="{{ value }}"{% if field_value(form.fieldType) == value %} selected="selected"{% endif %}>{{ label }}</option>
             {% endfor %}
@@ -126,6 +127,10 @@
             {% endfor %}
         </select>
     </div>
+
+    {% if isFormFieldEdit %}
+        <input type="hidden" name="isFormFieldEdit" value="1">
+    {% endif %}
 
     {{ form_rest(form) }}
 {% endblock %}

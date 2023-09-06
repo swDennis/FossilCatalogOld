@@ -35,6 +35,7 @@ class FossilsFormController extends AbstractController
 
         $viewAssign = [
             'form' => $form->createView(),
+            'isFormFieldEdit' => false,
         ];
 
         return $this->render('admin/fossilForm/addFormFieldForm.html.twig', $viewAssign);
@@ -42,20 +43,29 @@ class FossilsFormController extends AbstractController
 
     #[Route('/admin/settings/editForm/addField/save', name: 'app_admin_settings_edit_form_add_field_save')]
     public function addFossilFormFieldSave(
-        Request $request,
-        FossilFormFieldFormInterface $fossilFormFieldForm,
+        Request                            $request,
+        FossilFormFieldFormInterface       $fossilFormFieldForm,
         FossilFormFieldRepositoryInterface $fossilFormFieldRepository,
-        FossilFormEntityDatabaseCreator $fossilFormEntityDatabaseCreator,
-        FossilFormEntityCreator $fossilFormEntityCreator
+        FossilFormEntityDatabaseCreator    $fossilFormEntityDatabaseCreator,
+        FossilFormEntityCreator            $fossilFormEntityCreator
     ): Response {
         if (!$request->isMethod('POST')) {
             return $this->redirectToRoute('app_admin_settings_edit_form_add_field');
         }
 
+        $isFormFieldEdit = (bool)$request->get('isFormFieldEdit');
+
+
         $fossilFormField = new FossilFormField();
         $formBuilder = $this->createFormBuilder($fossilFormField);
         $form = $fossilFormFieldForm->createForm($formBuilder, $this->generateUrl('app_admin_settings_edit_form_add_field_save'));
         $postData = $this->getPostData($request, $form->getName());
+
+        if ($isFormFieldEdit && !empty($postData['id'])) {
+            $savedFormField = $fossilFormFieldRepository->getFossilFormFieldById($postData['id']);
+            $postData['fieldName'] = $savedFormField['fieldName'];
+            $postData['fieldType'] = $savedFormField['fieldType'];
+        }
 
         $form->submit($postData);
         $fossilFormField->fromArray($postData);
@@ -63,7 +73,7 @@ class FossilsFormController extends AbstractController
         $formIsSubmitted = $form->isSubmitted();
         $formIsValid = $form->isValid();
         if (!$formIsSubmitted || !$formIsValid) {
-            return $this->render('admin/fossilForm/addFormFieldForm.html.twig', ['form' => $form->createView()]);
+            return $this->render('admin/fossilForm/addFormFieldForm.html.twig', ['form' => $form->createView(), 'isFormFieldEdit' => false]);
         }
 
         $fossilFormFieldRepository->saveFossilFormField($fossilFormField);
@@ -75,11 +85,11 @@ class FossilsFormController extends AbstractController
 
     #[Route('/admin/settings/editForm/addField/delete', name: 'app_admin_settings_edit_form_add_field_delete')]
     public function deleteFossilFormField(
-        Request $request,
+        Request                            $request,
         FossilFormFieldRepositoryInterface $fossilFormFieldRepository,
-        FossilFormEntityCreator $fossilFormEntityCreator
+        FossilFormEntityCreator            $fossilFormEntityCreator
     ) {
-        $formFieldId = (int) $request->get('formFieldId');
+        $formFieldId = (int)$request->get('formFieldId');
 
         try {
             $fossilFormFieldRepository->deleteFossilFormField($formFieldId);
@@ -94,11 +104,11 @@ class FossilsFormController extends AbstractController
 
     #[Route('/admin/settings/editForm/addField/edit', name: 'app_admin_settings_edit_form_add_field_edit')]
     public function editFossilFormField(
-        Request $request,
-        FossilFormFieldFormInterface $fossilFormFieldForm,
+        Request                            $request,
+        FossilFormFieldFormInterface       $fossilFormFieldForm,
         FossilFormFieldRepositoryInterface $fossilFormFieldRepository
     ) {
-        $formFieldId = (int) $request->get('formFieldId');
+        $formFieldId = (int)$request->get('formFieldId');
 
         $fossilFormFieldArray = $fossilFormFieldRepository->getFossilFormFieldById($formFieldId);
 
@@ -109,20 +119,20 @@ class FossilsFormController extends AbstractController
         $form = $fossilFormFieldForm->createForm($formBuilder, $this->generateUrl('app_admin_settings_edit_form_add_field_save'));
         $form->submit($fossilFormFieldArray);
 
-        return $this->render('admin/fossilForm/addFormFieldForm.html.twig', ['form' => $form->createView()]);
+        return $this->render('admin/fossilForm/addFormFieldForm.html.twig', ['form' => $form->createView(), 'isFormFieldEdit' => true]);
     }
 
     private function getPostData(Request $request, string $formName): array
     {
         $postData = $request->get($formName);
 
-        $id = (int) $postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ID];
+        $id = (int)$postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ID];
         if ($id <= 0) {
             $id = null;
         }
 
         $postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ID] = $id;
-        $postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ORDER] = (int) $postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ORDER];
+        $postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ORDER] = (int)$postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ORDER];
 
         if (!array_key_exists(FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_SHOW_IN_OVERVIEW, $postData)) {
             $postData[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_SHOW_IN_OVERVIEW] = false;
