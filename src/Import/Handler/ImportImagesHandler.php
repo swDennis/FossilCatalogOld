@@ -47,24 +47,8 @@ class ImportImagesHandler extends AbstractImportHandler
                 break;
             }
 
-            $array = explode(',', $line);
-
             $image = new Image();
-            $image->fromArray([
-                'id' => $array[0],
-                'fossilId' => $array[1],
-                'mimeType' => $array[2],
-                'imageName' => $array[3],
-                'thumbnailName' => $array[4],
-                'relativePath' => $array[5],
-                'relativeImagePath' => $array[6],
-                'relativeThumbnailPath' => $array[7],
-                'absolutePath' => $array[8],
-                'absoluteImagePath' => $array[9],
-                'absoluteThumbnailPath' => $array[10],
-                'showInGallery' => (bool) $array[11],
-                'isMainImage' => (bool) preg_replace('/[\x00-\x1F\x7F]/u', '', $array[12]),
-            ]);
+            $image->fromArray(json_decode($line, true));
 
             $this->copyImages($image);
             $this->imageRepository->saveImage($image, true);

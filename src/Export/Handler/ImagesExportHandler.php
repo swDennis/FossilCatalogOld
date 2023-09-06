@@ -51,7 +51,7 @@ class ImagesExportHandler extends AbstractHandler
         }
 
         foreach ($data as $line) {
-            \file_put_contents($this->targetFile, implode(',', $line) . PHP_EOL, FILE_APPEND);
+            \file_put_contents($this->targetFile, json_encode($line) . PHP_EOL, FILE_APPEND);
 
             if (is_file($line['absoluteImagePath'])) {
                 $zip->addFile($line['absoluteImagePath'], str_replace('images/', '', $line['relativeImagePath']));

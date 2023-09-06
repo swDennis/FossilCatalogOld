@@ -44,15 +44,8 @@ class ImportTagHandler extends AbstractImportHandler
                 break;
             }
 
-            $array = explode(',', $line);
-
             $tag = new Tag();
-            $tag->fromArray([
-                'id' => $array[0],
-                'name' => $array[1],
-                'isUsedAsCategory' => (bool) preg_replace('/[\x00-\x1F\x7F]/u', '', $array[2]),
-            ]);
-
+            $tag->fromArray(json_decode($line, true));
 
             $this->tagRepository->saveTag($tag, true);
 

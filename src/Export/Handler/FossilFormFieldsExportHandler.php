@@ -40,7 +40,7 @@ class FossilFormFieldsExportHandler extends AbstractHandler
         $data = $this->fossilFormFieldRepository->getExportList(self::EXPORT_LIMIT, $status->getExported());
 
         foreach ($data as $line) {
-            \file_put_contents($this->targetFile, implode(',', $line) . PHP_EOL, FILE_APPEND);
+            \file_put_contents($this->targetFile, json_encode($line) . PHP_EOL, FILE_APPEND);
         }
 
         $status->add(count($data));

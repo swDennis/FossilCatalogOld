@@ -157,8 +157,13 @@ class FossilFormField extends AbstractStruct
     /**
      * @return bool
      */
-    public function isRequiredDefault(): bool
+    public function getIsRequiredDefault(): bool
     {
         return $this->isRequiredDefault;
+    }
+
+    public function setIsRequiredDefault(bool $isRequiredDefault): void
+    {
+        $this->isRequiredDefault = $isRequiredDefault;
     }
 }

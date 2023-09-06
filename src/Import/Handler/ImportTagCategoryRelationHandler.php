@@ -43,14 +43,7 @@ class ImportTagCategoryRelationHandler extends AbstractImportHandler
                 break;
             }
 
-            $array = explode(',', $line);
-
-            $this->tagCategoryRelationRepository->import([
-                'id' => $array[0],
-                'tagId' => $array[1],
-                'fossilId' => preg_replace('/[\x00-\x1F\x7F]/u', '', $array[2]),
-            ]);
-
+            $this->tagCategoryRelationRepository->import(json_decode($line, true));
 
             $lineCounter++;
         }

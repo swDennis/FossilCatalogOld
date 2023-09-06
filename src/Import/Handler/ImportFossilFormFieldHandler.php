@@ -45,20 +45,14 @@ class ImportFossilFormFieldHandler extends AbstractImportHandler
                 break;
             }
 
-            $array = explode(',', $line);
-
             $formField = new FossilFormField();
-            $formField->fromArray([
-                'id' => $array[0],
-                'fieldOrder' => $array[1],
-                'fieldName' => $array[2],
-                'fieldLabel' => $array[3],
-                'fieldType' => $array[4],
-                'showInOverview' => (bool) $array[5],
-                'allowBlank' => (bool) $array[6],
-                'isFilter' => (bool) $array[7],
-                'isRequiredDefault' => (bool) preg_replace('/[\x00-\x1F\x7F]/u', '', $array[8]),
-            ]);
+            $formField->fromArray(json_decode($line, true));
+
+            // TODO: REMOVE AFTER DEBUG
+            // $errorLogFile = Shopware()->Container()->getParameter('kernel.root_dir') . '/error.log';
+            $errorLogFile = __DIR__ . '/error.log';
+            \file_put_contents($errorLogFile, \var_export($formField, true) . PHP_EOL, FILE_APPEND);
+            // TODO: REMOVE AFTER DEBUG
 
             $this->fossilFormFieldRepository->saveFossilFormField($formField, true);
 

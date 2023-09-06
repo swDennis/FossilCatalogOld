@@ -153,15 +153,15 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
             ->$function(self::FORM_FIELD_COLUMN_FIELD_SHOW_IN_OVERVIEW, ':showInOverview')
             ->$function(self::FORM_FIELD_COLUMN_FIELD_ALLOW_BLANK, ':allowBlank')
             ->$function(self::FORM_FIELD_COLUMN_FIELD_IS_FILTER, ':isFilter')
+            ->$function(self::FORM_FIELD_COLUMN_IS_REQUIRED_DEFAULT, ':isRequiredDefault')
             ->setParameter('fieldName', $fossilFormField->getFieldName())
             ->setParameter('fieldLabel', $fossilFormField->getFieldLabel())
             ->setParameter('fieldType', $fossilFormField->getFieldType())
             ->setParameter('fieldOrder', $fossilFormField->getFieldOrder())
-            ->setParameter('fieldOrder', $fossilFormField->getFieldOrder())
-            ->setParameter('fieldOrder', $fossilFormField->getFieldOrder())
             ->setParameter('showInOverview', (int) $fossilFormField->getShowInOverview())
             ->setParameter('allowBlank', (int) $fossilFormField->getAllowBlank())
-            ->setParameter('isFilter', (int) $fossilFormField->getIsFilter());
+            ->setParameter('isFilter', (int) $fossilFormField->getIsFilter())
+            ->setParameter('isRequiredDefault', (int) $fossilFormField->getIsRequiredDefault());
 
         return $queryBuilder;
     }

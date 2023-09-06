@@ -15,6 +15,7 @@ interface FossilFormFieldRepositoryInterface
     public const FORM_FIELD_COLUMN_FIELD_SHOW_IN_OVERVIEW = 'showInOverview';
     public const FORM_FIELD_COLUMN_FIELD_ALLOW_BLANK = 'allowBlank';
     public const FORM_FIELD_COLUMN_FIELD_IS_FILTER = 'isFilter';
+    public const FORM_FIELD_COLUMN_IS_REQUIRED_DEFAULT = 'isRequiredDefault';
 
     public function saveFossilFormField(FossilFormField $formField): FossilFormField;
 
