@@ -14,10 +14,10 @@ class ImportService implements ImportServiceInterface
     private array $handler;
 
     public function __construct(
+        private readonly ImportFossilFormFieldHandler $fossilFormFieldHandler,
         private readonly ImportTagHandler $importTagHandler,
         private readonly ImportCategoryHandler $importCategoryHandler,
         private readonly ImportTagCategoryRelationHandler $tagCategoryRelationHandler,
-        private readonly ImportFossilFormFieldHandler $fossilFormFieldHandler,
         private readonly ImportImagesHandler $importImagesHandler,
         private readonly ImportFossilHandler $importFossilHandler
     ) {

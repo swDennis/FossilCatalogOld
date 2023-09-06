@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc428877-9e5b-4479-9008-f6e783201a4e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/637e700e-de2b-4823-9949-d4f3c189017c.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/637e700e-de2b-4823-9949-d4f3c189017c.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/637e700e-de2b-4823-9949-d4f3c189017c/storage_v2/_src_/schema/fossils.J_av1w.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/637e700e-de2b-4823-9949-d4f3c189017c/storage_v2/_src_/schema/fossils.J_av1w.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fossils.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fossils.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/FossilsFormController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/FossilsFormController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/FossilEntity.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/FossilEntity.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Import/Handler/ImportFossilFormFieldHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Import/Handler/ImportFossilFormFieldHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Import/ImportService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Import/ImportService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/admin/fossilForm/addFormFieldForm.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/admin/fossilForm/addFormFieldForm.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +202,8 @@
       <option name="presentableId" value="Default" />
       <updated>1693907115036</updated>
       <workItem from="1693907116060" duration="2417000" />
-      <workItem from="1693945653943" duration="2052000" />
+      <workItem from="1693945653943" duration="2520000" />
+      <workItem from="1694007400586" duration="1807000" />
     </task>
     <servers />
   </component>

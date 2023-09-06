@@ -777,8 +777,8 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </collation>
     <schema id="224" parent="1" name="fossils">
       <Current>1</Current>
-      <IntrospectionTimestamp>2023-09-05.22:57:28</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-09-05.20:57:28</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2023-09-06.16:07:12</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-09-06.14:07:12</LocalIntrospectionTimestamp>
       <CollationName>latin1_swedish_ci</CollationName>
     </schema>
     <schema id="225" parent="1" name="information_schema">
@@ -875,332 +875,348 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <NotNull>1</NotNull>
       <Position>10</Position>
     </column>
-    <index id="250" parent="233" name="PRIMARY">
+    <column id="250" parent="233" name="asd">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="251" parent="233" name="asdasd">
+      <DasType>varchar(50)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <index id="252" parent="233" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="251" parent="233" name="IDX_match_against_search_index">
+    <index id="253" parent="233" name="IDX_match_against_search_index">
       <ColNames>fossilNumber
-fossilGenus</ColNames>
+fossilGenus
+fossilSpecies
+findingPlace
+findingLayer
+earthAge</ColNames>
+      <Type>fulltext</Type>
+    </index>
+    <index id="254" parent="233" name="fossil_entity_asd_text_INDEX">
+      <ColNames>asd</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="252" parent="233" name="PRIMARY">
+    <key id="255" parent="233" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="253" parent="234" name="id">
+    <column id="256" parent="234" name="id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="254" parent="234" name="fieldOrder">
+    <column id="257" parent="234" name="fieldOrder">
       <DasType>int(11)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>2</Position>
     </column>
-    <column id="255" parent="234" name="fieldName">
+    <column id="258" parent="234" name="fieldName">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="256" parent="234" name="fieldLabel">
+    <column id="259" parent="234" name="fieldLabel">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="257" parent="234" name="fieldType">
+    <column id="260" parent="234" name="fieldType">
       <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="258" parent="234" name="showInOverview">
+    <column id="261" parent="234" name="showInOverview">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="259" parent="234" name="allowBlank">
+    <column id="262" parent="234" name="allowBlank">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="260" parent="234" name="isFilter">
+    <column id="263" parent="234" name="isFilter">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
-    <column id="261" parent="234" name="isRequiredDefault">
+    <column id="264" parent="234" name="isRequiredDefault">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
-    <index id="262" parent="234" name="PRIMARY">
+    <index id="265" parent="234" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="263" parent="234" name="fieldName">
+    <index id="266" parent="234" name="fieldName">
       <ColNames>fieldName</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="264" parent="234" name="IDX_fossil_form_field_order">
+    <index id="267" parent="234" name="IDX_fossil_form_field_order">
       <ColNames>fieldOrder</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="265" parent="234" name="PRIMARY">
+    <key id="268" parent="234" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="266" parent="234" name="fieldName">
+    <key id="269" parent="234" name="fieldName">
       <UnderlyingIndexName>fieldName</UnderlyingIndexName>
     </key>
-    <column id="267" parent="235" name="id">
+    <column id="270" parent="235" name="id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="268" parent="235" name="fossilId">
+    <column id="271" parent="235" name="fossilId">
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="269" parent="235" name="mimeType">
+    <column id="272" parent="235" name="mimeType">
       <DasType>varchar(255)|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="270" parent="235" name="imageName">
+    <column id="273" parent="235" name="imageName">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="271" parent="235" name="thumbnailName">
+    <column id="274" parent="235" name="thumbnailName">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="272" parent="235" name="relativePath">
+    <column id="275" parent="235" name="relativePath">
       <DasType>varchar(255)|0s</DasType>
       <Position>6</Position>
     </column>
-    <column id="273" parent="235" name="relativeImagePath">
+    <column id="276" parent="235" name="relativeImagePath">
       <DasType>text|0s</DasType>
       <Position>7</Position>
     </column>
-    <column id="274" parent="235" name="relativeThumbnailPath">
+    <column id="277" parent="235" name="relativeThumbnailPath">
       <DasType>text|0s</DasType>
       <Position>8</Position>
     </column>
-    <column id="275" parent="235" name="absolutePath">
+    <column id="278" parent="235" name="absolutePath">
       <DasType>text|0s</DasType>
       <Position>9</Position>
     </column>
-    <column id="276" parent="235" name="absoluteImagePath">
+    <column id="279" parent="235" name="absoluteImagePath">
       <DasType>text|0s</DasType>
       <Position>10</Position>
     </column>
-    <column id="277" parent="235" name="absoluteThumbnailPath">
+    <column id="280" parent="235" name="absoluteThumbnailPath">
       <DasType>text|0s</DasType>
       <Position>11</Position>
     </column>
-    <column id="278" parent="235" name="showInGallery">
+    <column id="281" parent="235" name="showInGallery">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>12</Position>
     </column>
-    <column id="279" parent="235" name="isMainImage">
+    <column id="282" parent="235" name="isMainImage">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>13</Position>
     </column>
-    <index id="280" parent="235" name="PRIMARY">
+    <index id="283" parent="235" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="281" parent="235" name="IDX_image_fossil_id">
+    <index id="284" parent="235" name="IDX_image_fossil_id">
       <ColNames>fossilId</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="282" parent="235" name="PRIMARY">
+    <key id="285" parent="235" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="283" parent="236" name="id">
+    <column id="286" parent="236" name="id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="284" parent="236" name="body">
+    <column id="287" parent="236" name="body">
       <DasType>longtext|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="285" parent="236" name="headers">
+    <column id="288" parent="236" name="headers">
       <DasType>longtext|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="286" parent="236" name="queue_name">
+    <column id="289" parent="236" name="queue_name">
       <DasType>varchar(190)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="287" parent="236" name="created_at">
+    <column id="290" parent="236" name="created_at">
       <DasType>datetime|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="288" parent="236" name="available_at">
+    <column id="291" parent="236" name="available_at">
       <DasType>datetime|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="289" parent="236" name="delivered_at">
+    <column id="292" parent="236" name="delivered_at">
       <DasType>datetime|0s</DasType>
       <Position>7</Position>
     </column>
-    <index id="290" parent="236" name="PRIMARY">
+    <index id="293" parent="236" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="291" parent="236" name="IDX_messenger_messages_queue_name">
+    <index id="294" parent="236" name="IDX_messenger_messages_queue_name">
       <ColNames>queue_name</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="292" parent="236" name="IDX_messenger_messages_available_at">
+    <index id="295" parent="236" name="IDX_messenger_messages_available_at">
       <ColNames>available_at</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="293" parent="236" name="IDX_messenger_messages_delivered_at">
+    <index id="296" parent="236" name="IDX_messenger_messages_delivered_at">
       <ColNames>delivered_at</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="294" parent="236" name="PRIMARY">
+    <key id="297" parent="236" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="295" parent="237" name="id">
+    <column id="298" parent="237" name="id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="296" parent="237" name="name">
+    <column id="299" parent="237" name="name">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="297" parent="237" name="isUsedAsCategory">
+    <column id="300" parent="237" name="isUsedAsCategory">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <index id="298" parent="237" name="PRIMARY">
+    <index id="301" parent="237" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="299" parent="237" name="UNIQ_tag_name">
+    <index id="302" parent="237" name="UNIQ_tag_name">
       <ColNames>name</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="300" parent="237" name="PRIMARY">
+    <key id="303" parent="237" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="301" parent="237" name="UNIQ_tag_name">
+    <key id="304" parent="237" name="UNIQ_tag_name">
       <UnderlyingIndexName>UNIQ_tag_name</UnderlyingIndexName>
     </key>
-    <column id="302" parent="238" name="id">
+    <column id="305" parent="238" name="id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="303" parent="238" name="tagId">
+    <column id="306" parent="238" name="tagId">
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="304" parent="238" name="fossilId">
+    <column id="307" parent="238" name="fossilId">
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <index id="305" parent="238" name="PRIMARY">
+    <index id="308" parent="238" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="306" parent="238" name="UNIQ_tag_fossil_tagId_fossilId">
+    <index id="309" parent="238" name="UNIQ_tag_fossil_tagId_fossilId">
       <ColNames>tagId
 fossilId</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="307" parent="238" name="PRIMARY">
+    <key id="310" parent="238" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="308" parent="238" name="UNIQ_tag_fossil_tagId_fossilId">
+    <key id="311" parent="238" name="UNIQ_tag_fossil_tagId_fossilId">
       <UnderlyingIndexName>UNIQ_tag_fossil_tagId_fossilId</UnderlyingIndexName>
     </key>
-    <column id="309" parent="239" name="id">
+    <column id="312" parent="239" name="id">
       <AutoIncrement>2</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="310" parent="239" name="email">
+    <column id="313" parent="239" name="email">
       <DasType>varchar(180)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="311" parent="239" name="roles">
+    <column id="314" parent="239" name="roles">
       <DasType>json|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="312" parent="239" name="password">
+    <column id="315" parent="239" name="password">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <index id="313" parent="239" name="PRIMARY">
+    <index id="316" parent="239" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="314" parent="239" name="UNIQ_user_email">
+    <index id="317" parent="239" name="UNIQ_user_email">
       <ColNames>email</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="315" parent="239" name="PRIMARY">
+    <key id="318" parent="239" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="316" parent="239" name="UNIQ_user_email">
+    <key id="319" parent="239" name="UNIQ_user_email">
       <UnderlyingIndexName>UNIQ_user_email</UnderlyingIndexName>
     </key>
   </database-model>
