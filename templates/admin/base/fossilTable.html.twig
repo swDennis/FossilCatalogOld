@@ -5,7 +5,7 @@
         {% for formField in formFields %}
             <th scope="col">{{ formField.fieldLabel }}</th>
         {% endfor %}
-        <th  class="fossil-list-action-column">Aktionen</th>
+        <th class="fossil-list-action-column">Aktionen</th>
     </tr>
     </thead>
     <tbody>
@@ -23,17 +23,17 @@
             {% endfor %}
             <td>
                 <a href="{{ url('app_admin_fossil_details', {'fossilId': fossil.id}) }}"
-                   class="float-left btn btn-primary btn">
+                   class="float-left btn btn-primary">
                     <i class="bi-search"></i>
                 </a>
 
                 <a href="{{ url('app_admin_edit_fossil', {'fossilId': fossil.id}) }}"
-                   class="float-left margin-left-ten btn btn-secondary btn">
+                   class="float-left margin-left-ten btn btn-secondary">
                     <i class="bi-pencil"></i>
                 </a>
 
                 <a href="{{ url('app_admin_fossil_delete', {'fossilId': fossil.id}) }}"
-                   class="float-left margin-left-ten btn btn-danger btn"
+                   class="float-left margin-left-ten btn btn-danger"
                    data-delete-fossil="true"
                    data-fossil-id="{{ fossil.id }}"
                    data-fossil-number="{{ fossil.fossilNumber }}">

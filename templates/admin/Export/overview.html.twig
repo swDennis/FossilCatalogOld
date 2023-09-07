@@ -59,7 +59,7 @@
                     <h5>Exporte</h5>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped export-table">
+                    <table class="table table-striped table-hover export-table">
                         <thead>
                         <tr>
                             <th class="w-25" scope="col">Erstellt am</th>
@@ -78,8 +78,14 @@
                                     <a href="{{ url('app_admin_export_zip', {'directory': export.realPath, 'name': export.name}) }}"
                                        data-downloadButton="true"
                                        data-downloadUrl="{{ url('app_admin_download_zip') }}"
-                                       class="float-left btn btn-primary btn">
+                                       class="float-left btn btn-primary">
                                         <i class="bi-download"></i>
+                                    </a>
+
+                                    <a href="{{ url('app_admin_delete_export_zip', {'directory': export.realPath, 'name': export.name}) }}"
+                                       data-deleteButton="true"
+                                       class="float-left margin-left-ten btn btn-danger">
+                                        <i class="bi-trash"></i>
                                     </a>
                                 </td>
                             </tr>

@@ -15,4 +15,6 @@ interface ExportServiceInterface
     public function clearSession(): void;
 
     public function createZipFile(string $directory, string $name): string;
+
+    public function deleteBackup(string $path): void;
 }
