@@ -79,7 +79,7 @@ class ExportController extends AbstractController
             return new JsonResponse(['message' => 'There is a problem with the ZipFile'], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(['message' => 'ok', 'zipFile' => $zipFile], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'ok', 'zipFile' => $zipFile]);
     }
 
     #[Route('/admin/download/zip', name: 'app_admin_download_zip')]
@@ -97,5 +97,17 @@ class ExportController extends AbstractController
         );
 
         return $response;
+    }
+
+    #[Route('/admin/export/zip/delete', name: 'app_admin_delete_export_zip')]
+    public function deleteExportZip(
+        Request $request,
+        ExportServiceInterface $exportService
+    ): JsonResponse {
+        $directory = $request->get('directory');
+
+        $exportService->deleteBackup($directory);
+
+        return new JsonResponse(['message' => 'ok']);
     }
 }

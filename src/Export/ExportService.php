@@ -10,6 +10,7 @@ use App\Export\Handler\FossilFormFieldsExportHandler;
 use App\Export\Handler\ImagesExportHandler;
 use App\Export\Handler\TagCategoryRelationExportHandler;
 use App\Export\Handler\TagExportHandler;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 use ZipArchive;
@@ -121,6 +122,12 @@ class ExportService implements ExportServiceInterface
         $zip->close();
 
         return $target;
+    }
+
+    public function deleteBackup(string $path): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove($path);
     }
 
     private function createTargetDirectory(): string
