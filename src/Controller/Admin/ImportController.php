@@ -40,17 +40,8 @@ class ImportController extends AbstractController
             $file = $importUploadService->moveToImportDirectory($request, 'form', 'import');
             $importFileValidator->validate($file);
         } catch (\Exception $exception) {
-            // TODO: implement
-            // TODO: add flash message
+            $this->addFlash('Exception', $exception->getMessage() . '<br><br>' . $exception->getTraceAsString());
 
-
-            // TODO: REMOVE AFTER DEBUG
-            echo '<pre>';
-            var_export('??');
-            var_export($exception->getMessage());
-            echo '<br />';
-            die();
-            // TODO: REMOVE AFTER DEBUG
             return $this->redirectToRoute('app_admin_import');
         }
 
@@ -65,15 +56,8 @@ class ImportController extends AbstractController
     ) {
         $file = $request->get('importFile');
         if (!is_string($file) || !is_file($file)) {
-            // TODO: add flash message and implement flash message
+            $this->addFlash('Failure', 'Cannot read import file: ' . $file);
 
-
-            // TODO: REMOVE AFTER DEBUG
-            echo '<pre>';
-            var_export('o0');
-            echo '<br />';
-            die();
-            // TODO: REMOVE AFTER DEBUG
             return $this->redirectToRoute('app_admin_import');
         }
 
@@ -82,21 +66,15 @@ class ImportController extends AbstractController
         try {
             $directory = $importFileValidator->validateContentStructure($file);
         } catch (\Exception $exception) {
-            // TODO: implement
-            // TODO: add flash message
+            $this->addFlash('Exception', $exception->getMessage() . '<br><br>' . $exception->getTraceAsString());
 
-
-            // TODO: REMOVE AFTER DEBUG
-            echo '<pre>';
-            var_export($exception->getMessage());
-            echo '<br />';
-            die();
-            // TODO: REMOVE AFTER DEBUG
             return $this->redirectToRoute('app_admin_import');
         }
 
+        $data = $importService->analyzeData($directory);
+
         return $this->render('admin/Import/progress.html.twig', [
-            'data' => $importService->analyzeData($directory),
+            'data' => $data,
         ]);
     }
 

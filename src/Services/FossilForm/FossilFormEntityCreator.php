@@ -26,7 +26,7 @@ class FossilFormEntityCreator
         $getter = $this->createGetterString($formFields);
 
         $setter = $this->createSetterString($formFields);
-        
+
         $template = $this->getTemplate();
 
         $renderedEntityCode = sprintf($template, self::FOSSIL_ENTITY_NAME, $properties, $getter, $setter);
