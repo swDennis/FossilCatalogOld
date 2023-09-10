@@ -22,10 +22,10 @@ class ImportService implements ImportServiceInterface
         private readonly ImportFossilHandler $importFossilHandler
     ) {
         $this->handler = [
+            $this->fossilFormFieldHandler,
             $this->importTagHandler,
             $this->importCategoryHandler,
             $this->tagCategoryRelationHandler,
-            $this->fossilFormFieldHandler,
             $this->importImagesHandler,
             $this->importFossilHandler,
         ];

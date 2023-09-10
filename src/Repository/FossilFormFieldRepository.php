@@ -26,7 +26,7 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
         try {
             $queryBuilder->executeQuery();
         } catch (\Exception $exception) {
-            throw new \RuntimeException('Could not save FossilFormField entity');
+            throw new \RuntimeException(sprintf('Could not save FossilFormField entity: %s', $exception->getMessage()));
         }
 
 
@@ -68,13 +68,19 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
 
     public function getFossilFormFieldById(int $id): array
     {
-        return $this->connection->createQueryBuilder()
+        $result = $this->connection->createQueryBuilder()
             ->select('*')
             ->from(FossilFormFieldRepositoryInterface::FORM_FIELD_TABLE_NAME)
             ->where('id = :id')
             ->setParameter('id', $id)
             ->executeQuery()
             ->fetchAssociative();
+
+        if (!$result) {
+            return [];
+        }
+
+        return $result;
     }
 
     public function deleteFossilFormField(int $id): void
@@ -132,7 +138,7 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
 
     private function createInsertUpdateQueryBuilder(
         FossilFormField $fossilFormField,
-        bool $isNewFormField
+        bool            $isNewFormField
     ): QueryBuilder {
         $queryBuilder = $this->connection->createQueryBuilder();
         if ($isNewFormField) {
@@ -158,10 +164,10 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
             ->setParameter('fieldLabel', $fossilFormField->getFieldLabel())
             ->setParameter('fieldType', $fossilFormField->getFieldType())
             ->setParameter('fieldOrder', $fossilFormField->getFieldOrder())
-            ->setParameter('showInOverview', (int) $fossilFormField->getShowInOverview())
-            ->setParameter('allowBlank', (int) $fossilFormField->getAllowBlank())
-            ->setParameter('isFilter', (int) $fossilFormField->getIsFilter())
-            ->setParameter('isRequiredDefault', (int) $fossilFormField->getIsRequiredDefault());
+            ->setParameter('showInOverview', (int)$fossilFormField->getShowInOverview())
+            ->setParameter('allowBlank', (int)$fossilFormField->getAllowBlank())
+            ->setParameter('isFilter', (int)$fossilFormField->getIsFilter())
+            ->setParameter('isRequiredDefault', (int)$fossilFormField->getIsRequiredDefault());
 
         return $queryBuilder;
     }

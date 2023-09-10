@@ -14,7 +14,7 @@ databaseColumnNameHelper.prototype.registerEvents = function() {
 };
 
 databaseColumnNameHelper.prototype.onChange = function(event) {
-    const pattern = /[a-z]|_/;
+    const pattern = /[a-z]/;
 
     if (!event.key.match(pattern)) {
         event.preventDefault();

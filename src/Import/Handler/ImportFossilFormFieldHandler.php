@@ -48,13 +48,9 @@ class ImportFossilFormFieldHandler extends AbstractImportHandler
             $formField = new FossilFormField();
             $formField->fromArray(json_decode($line, true));
 
-            // TODO: REMOVE AFTER DEBUG
-            // $errorLogFile = Shopware()->Container()->getParameter('kernel.root_dir') . '/error.log';
-            $errorLogFile = __DIR__ . '/error.log';
-            \file_put_contents($errorLogFile, \var_export($formField, true) . PHP_EOL, FILE_APPEND);
-            // TODO: REMOVE AFTER DEBUG
+            $exists = empty($this->fossilFormFieldRepository->getFossilFormFieldById($formField->getId()));
 
-            $this->fossilFormFieldRepository->saveFossilFormField($formField, true);
+            $this->fossilFormFieldRepository->saveFossilFormField($formField, $exists);
 
             $lineCounter++;
         }
