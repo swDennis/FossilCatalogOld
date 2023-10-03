@@ -2,6 +2,7 @@
 
 namespace App\Services\Image;
 
+use App\Entity\Image;
 use App\Services\Image\TransportObjects\ImageNames;
 use App\Services\Image\TransportObjects\ImagePath;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,9 @@ interface ImageServiceInterface
 
     public const RANDOM_BYTE_LENGTH = 2;
 
+    /**
+     * @return array<Image>
+     */
     public function saveImagesFromRequest(
         Request $request,
         string $formName,

@@ -9,6 +9,7 @@ use App\Import\Exception\UnexpectedFileNameException;
 use App\Import\Exception\UnexpectedMimeTypeException;
 use Iterator;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\File\File;
 use ZipArchive;
 
@@ -19,7 +20,7 @@ class ImportFileValidator implements ImportFileValidatorInterface
         if ($file->getMimeType() !== self::EXPECTED_MIME_TYPE) {
             $this->deleteFile($file->getPathname());
 
-            throw new UnexpectedMimeTypeException($file->getMimeType());
+            throw new UnexpectedMimeTypeException((string) $file->getMimeType());
         }
 
         $isFileNameMatch = preg_match(self::FILE_REGEX, $file->getFilename(), $match, PREG_OFFSET_CAPTURE);
@@ -87,7 +88,12 @@ class ImportFileValidator implements ImportFileValidatorInterface
         unlink($filePath);
     }
 
-    private function isFileInIterator(string $fileName, Iterator $iterator)
+    /**
+     * @param string   $fileName
+     * @param Iterator<string, SplFileInfo> $iterator
+     * @return bool
+     */
+    private function isFileInIterator(string $fileName, Iterator $iterator): bool
     {
         foreach ($iterator as $file) {
             if ($file->getFilename() === $fileName) {

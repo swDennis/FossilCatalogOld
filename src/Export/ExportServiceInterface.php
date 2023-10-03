@@ -6,8 +6,14 @@ interface ExportServiceInterface
 {
     const ZIP_FILE_EXTENSION = '.fossilienkatalog.backup.zip';
 
+    /**
+     * @return array<string, mixed>
+     */
     public function analyzeData(): array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function export(): array;
 
     public function initializeFiles(): void;

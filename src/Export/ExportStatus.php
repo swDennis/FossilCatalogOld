@@ -16,14 +16,14 @@ class ExportStatus
 
     public function __construct(
         string $type,
-        ?bool $isFinished = false,
-        ?int $toExport = 0,
-        ?int $exported = 0,
+        ?bool  $isFinished = false,
+        ?int   $toExport = 0,
+        ?int   $exported = 0,
     ) {
         $this->type = $type;
-        $this->isFinished = $isFinished;
-        $this->toExport = $toExport;
-        $this->exported = $exported;
+        $this->isFinished = $isFinished ?? false;
+        $this->toExport = $toExport ?? 0;
+        $this->exported = $exported ?? 0;
     }
 
     public function add(int $count): void
@@ -36,11 +36,14 @@ class ExportStatus
         $this->isFinished = true;
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     public function fromArray(array $data): ExportStatus
     {
         foreach ($this->getProperties() as $property) {
             if (!array_key_exists($property, $data)) {
-                throw new MissingArrayKeyException($property, $data);
+                throw new MissingArrayKeyException($property);
             }
 
             $this->$property = $data[$property];
@@ -49,6 +52,9 @@ class ExportStatus
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         $array = [];
@@ -74,6 +80,9 @@ class ExportStatus
         return $this->exported;
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getProperties(): array
     {
         return [

@@ -8,13 +8,14 @@ class FossilFormField extends AbstractStruct
 {
     protected ?int $id = null;
 
-    protected ?int $fieldOrder = null;
+    protected int $fieldOrder;
 
-    protected ?string $fieldName = null;
+    protected string $fieldName;
 
-    protected ?string $fieldLabel = null;
+    protected string $fieldLabel;
 
-    protected ?string $fieldType = FormFieldType::TEXT;
+    protected string $fieldType = FormFieldType::TEXT;
+
 
     protected bool $showInOverview = false;
 
@@ -24,6 +25,8 @@ class FossilFormField extends AbstractStruct
 
     protected bool $isRequiredDefault = false;
 
+    protected string $value = '';
+
     /**
      * @return int|null
      */
@@ -32,89 +35,56 @@ class FossilFormField extends AbstractStruct
         return $this->id;
     }
 
-    /**
-     * @param int|null $id
-     */
-    public function setId(?int $id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getFieldOrder(): ?int
+    public function getFieldOrder(): int
     {
         return $this->fieldOrder;
     }
 
-    /**
-     * @param int|null $fieldOrder
-     */
-    public function setFieldOrder(?int $fieldOrder): void
+    public function setFieldOrder(int $fieldOrder): void
     {
         $this->fieldOrder = $fieldOrder;
     }
 
-    /**
-     * @return string
-     */
-    public function getFieldName(): ?string
+    public function getFieldName(): string
     {
         return $this->fieldName;
     }
 
-    /**
-     * @param string $fieldName
-     */
-    public function setFieldName(?string $fieldName): void
+    public function setFieldName(string $fieldName): void
     {
         $this->fieldName = $fieldName;
     }
 
-    /**
-     * @return string
-     */
-    public function getFieldLabel(): ?string
+    public function getFieldLabel(): string
     {
         return $this->fieldLabel;
     }
 
-    /**
-     * @param string $fielLabel
-     */
-    public function setFieldLabel(?string $fieldLabel): void
+    public function setFieldLabel(string $fieldLabel): void
     {
         $this->fieldLabel = $fieldLabel;
     }
 
-    /**
-     * @return string
-     */
-    public function getFieldType(): ?string
+    public function getFieldType(): string
     {
         return $this->fieldType;
     }
 
-    /**
-     * @param string $fieldType
-     */
-    public function setFieldType(?string $fieldType): void
+    public function setFieldType(string $fieldType): void
     {
         $this->fieldType = $fieldType;
     }
 
-    /**
-     * @return bool
-     */
     public function getShowInOverview(): bool
     {
         return $this->showInOverview;
     }
 
-    /**
-     * @param bool $showInOverview
-     */
     public function setShowInOverview(bool $showInOverview): self
     {
         $this->showInOverview = $showInOverview;
@@ -122,41 +92,26 @@ class FossilFormField extends AbstractStruct
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsFilter(): bool
     {
         return $this->isFilter;
     }
 
-    /**
-     * @param bool $isFilter
-     */
     public function setIsFilter(bool $isFilter): void
     {
         $this->isFilter = $isFilter;
     }
 
-    /**
-     * @return bool
-     */
     public function getAllowBlank(): bool
     {
         return $this->allowBlank;
     }
 
-    /**
-     * @param bool $allowBlank
-     */
     public function setAllowBlank(bool $allowBlank): void
     {
         $this->allowBlank = $allowBlank;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsRequiredDefault(): bool
     {
         return $this->isRequiredDefault;
@@ -165,5 +120,15 @@ class FossilFormField extends AbstractStruct
     public function setIsRequiredDefault(bool $isRequiredDefault): void
     {
         $this->isRequiredDefault = $isRequiredDefault;
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): void
+    {
+        $this->value = $value;
     }
 }

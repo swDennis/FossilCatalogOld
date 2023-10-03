@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ImportTagHandler extends AbstractImportHandler
 {
     public function __construct(
-        private readonly RequestStack $requestStack,
+        private readonly RequestStack           $requestStack,
         private readonly TagRepositoryInterface $tagRepository
     ) {
         parent::__construct($this->requestStack);
@@ -31,6 +31,9 @@ class ImportTagHandler extends AbstractImportHandler
         $this->status = $this->getStatusFromSession();
 
         $file = fopen($this->status->getFile(), 'rb');
+        if (!$file) {
+            throw new \UnexpectedValueException('Expects file to import tags');
+        }
 
         $offset = $this->status->getImported();
         for ($i = 0; $i < $offset; $i++) {
@@ -45,8 +48,14 @@ class ImportTagHandler extends AbstractImportHandler
             }
 
             $tag = new Tag();
-            $tag->fromArray(json_decode($line, true));
+            $array = json_decode($line, true);
+            if (!is_array($array)) {
+                throw new \UnexpectedValueException('Expect array got ' . gettype($array));
+            }
 
+            $tag->fromArray($array);
+
+            /** @phpstan-ignore-next-line */
             $this->tagRepository->saveTag($tag, true);
 
             $lineCounter++;

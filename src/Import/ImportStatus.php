@@ -19,19 +19,19 @@ class ImportStatus
     protected int $imported;
 
     public function __construct(
-        string $type,
+        string  $type,
         ?string $file = '',
-        ?bool $isAnalyzed = false,
-        ?bool $isFinished = false,
-        ?int $toImport = 0,
-        ?int $imported = 0,
+        ?bool   $isAnalyzed = false,
+        ?bool   $isFinished = false,
+        ?int    $toImport = 0,
+        ?int    $imported = 0,
     ) {
         $this->type = $type;
-        $this->isFinished = $isFinished;
-        $this->toImport = $toImport;
-        $this->imported = $imported;
-        $this->file = $file;
-        $this->isAnalyzed = $isAnalyzed;
+        $this->file = $file ?? '';
+        $this->isAnalyzed = $isAnalyzed ?? false;
+        $this->isFinished = $isFinished ?? false;
+        $this->toImport = $toImport ?? 0;
+        $this->imported = $imported ?? 0;
     }
 
     public function add(int $count): void
@@ -44,6 +44,9 @@ class ImportStatus
         $this->isFinished = true;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function toArray(): array
     {
         $array = [];
@@ -54,6 +57,9 @@ class ImportStatus
         return $array;
     }
 
+    /**
+     * @param array<string,mixed> $data
+     */
     public function fromArray(array $data): ImportStatus
     {
         if (empty($data)) {
@@ -106,6 +112,9 @@ class ImportStatus
         return is_file($this->file);
     }
 
+    /**
+     * @return array<int, string>
+     */
     private function getProperties(): array
     {
         return [

@@ -19,20 +19,30 @@ interface FossilFormFieldRepositoryInterface
 
     public function saveFossilFormField(FossilFormField $formField): FossilFormField;
 
+    /**
+     * @return array<FossilFormField>
+     */
     public function getFossilFormFieldList(): array;
 
+    /**
+     * @return array<FossilFormField>
+     */
     public function getFossilFormFieldListForOverview(): array;
 
     public function deleteFossilFormField(int $id): void;
 
-    public function getFossilFormFieldById(int $id): array;
+    public function getFossilFormFieldById(int $id): ?FossilFormField;
 
+    /**
+     * @return array<FossilFormField>
+     */
     public function getFilterableFields(): array;
-
-    public function getFilterableFieldsPopulatedWithValues(): array;
 
     public function getNewOrderNumber(): int;
 
+    /**
+     * @return array<int,array<string,mixed>>
+     */
     public function getExportList(int $limit, int $offset): array;
 
     public function getColumnCount(): int;

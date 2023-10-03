@@ -37,6 +37,9 @@ class ImportFossilFormFieldHandler extends AbstractImportHandler
         $this->status = $this->getStatusFromSession();
 
         $file = fopen($this->status->getFile(), 'rb');
+        if (!$file) {
+            throw new \UnexpectedValueException('Expects file to import form fields');
+        }
 
         $lineCounter = 0;
         for ($i = 0; $i < self::IMPORT_LIMIT; $i++) {
@@ -45,11 +48,17 @@ class ImportFossilFormFieldHandler extends AbstractImportHandler
                 break;
             }
 
+            $array = json_decode($line, true);
+            if (!is_array($array)) {
+                throw new \UnexpectedValueException('Expect array got ' . gettype($array));
+            }
+
             $formField = new FossilFormField();
-            $formField->fromArray(json_decode($line, true));
+            $formField->fromArray($array);
 
-            $exists = empty($this->fossilFormFieldRepository->getFossilFormFieldById($formField->getId()));
+            $exists = empty($this->fossilFormFieldRepository->getFossilFormFieldById((int) $formField->getId()));
 
+            /** @phpstan-ignore-next-line */
             $this->fossilFormFieldRepository->saveFossilFormField($formField, $exists);
 
             $lineCounter++;

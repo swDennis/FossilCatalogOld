@@ -34,6 +34,9 @@ class ImportImagesHandler extends AbstractImportHandler
         $this->status = $this->getStatusFromSession();
 
         $file = fopen($this->status->getFile(), 'rb');
+        if (!$file) {
+            throw new \UnexpectedValueException('Expects file to import images');
+        }
 
         $offset = $this->status->getImported();
         for ($i = 0; $i < $offset; $i++) {
@@ -47,10 +50,16 @@ class ImportImagesHandler extends AbstractImportHandler
                 break;
             }
 
+            $array = json_decode($line, true);
+            if (!is_array($array)) {
+                throw new \UnexpectedValueException('Expect array got ' . gettype($array));
+            }
+
             $image = new Image();
-            $image->fromArray(json_decode($line, true));
+            $image->fromArray($array);
 
             $this->copyImages($image);
+            /** @phpstan-ignore-next-line */
             $this->imageRepository->saveImage($image, true);
 
             $lineCounter++;

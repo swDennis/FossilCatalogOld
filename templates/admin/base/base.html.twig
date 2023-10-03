@@ -9,21 +9,20 @@
 
 <div class="container">
     {% block content %}
-    <div class="card">
-        <div class="card-header">
-            <h5>{% block cardHeaderText %}Fossilien{% endblock %}</h5>
-        </div>
+        <div class="card">
+            <div class="card-header">
+                <h5>{% block cardHeaderText %}Fossilien{% endblock %}</h5>
+            </div>
 
-        <div class="card-body">
-            {% block cardBodyContent %}
+            <div class="card-body">
+                {% block cardBodyContent %}
 
-            {% endblock %}
+                {% endblock %}
+            </div>
         </div>
-    </div>
     {% endblock %}
 
-    {% block aditionalContent %}
-    {% endblock %}
+    {% block aditionalContent %}{% endblock %}
 
 </div>
 {% endblock %}

@@ -52,6 +52,10 @@ class CreateUserController extends AbstractController
         $formBuilder = $this->createFormBuilder($installationUserData);
         $form = $createUserForm->createForm($formBuilder, $this->generateUrl('app_install_save_user'));
         $postData = $request->get($form->getName());
+        if(!is_array($postData)) {
+            throw new \UnexpectedValueException('Expect array, got ' . gettype($postData));
+        }
+
         $form->submit($postData);
         $installationUserData->fromArray($postData);
 

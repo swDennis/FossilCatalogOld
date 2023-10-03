@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\FossilFormField;
+use App\Exceptions\IsNotNumericException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
@@ -39,34 +40,37 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
             throw new \RuntimeException('Could not create FossilFormField entity');
         }
 
-        $fossilFormField->setId($id);
+        $fossilFormField->setId((int) $id);
 
         return $fossilFormField;
     }
 
     public function getFossilFormFieldList(): array
     {
-        return $this->connection->createQueryBuilder()
+        $result = $this->connection->createQueryBuilder()
             ->select(['*'])
             ->from(FossilFormFieldRepositoryInterface::FORM_FIELD_TABLE_NAME)
             ->orderBy(FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ORDER)
             ->executeQuery()
             ->fetchAllAssociative();
 
+        return $this->prepareListResult($result);
     }
 
     public function getFossilFormFieldListForOverview(): array
     {
-        return $this->connection->createQueryBuilder()
+        $result = $this->connection->createQueryBuilder()
             ->select(['*'])
             ->from(FossilFormFieldRepositoryInterface::FORM_FIELD_TABLE_NAME)
             ->where(FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_SHOW_IN_OVERVIEW)
             ->orderBy(FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_ORDER)
             ->executeQuery()
             ->fetchAllAssociative();
+
+        return $this->prepareListResult($result);
     }
 
-    public function getFossilFormFieldById(int $id): array
+    public function getFossilFormFieldById(int $id): ?FossilFormField
     {
         $result = $this->connection->createQueryBuilder()
             ->select('*')
@@ -77,10 +81,10 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
             ->fetchAssociative();
 
         if (!$result) {
-            return [];
+            return null;
         }
 
-        return $result;
+        return (new FossilFormField())->fromArray($result);
     }
 
     public function deleteFossilFormField(int $id): void
@@ -95,25 +99,15 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
 
     public function getFilterableFields(): array
     {
-        return $this->connection->createQueryBuilder()
+        $result = $this->connection->createQueryBuilder()
             ->select(['*'])
             ->from(self::FORM_FIELD_TABLE_NAME)
             ->where(self::FORM_FIELD_COLUMN_FIELD_IS_FILTER . ' = 1')
             ->andWhere('fieldType NOT LIKE "date"')
             ->executeQuery()
             ->fetchAllAssociative();
-    }
 
-
-    public function getFilterableFieldsPopulatedWithValues(): array
-    {
-        $filterAbleFields = $this->getFilterableFields();
-
-        foreach ($filterAbleFields as &$filterAbleField) {
-            $filterAbleField['values'] = $this->getValuesForFilterableField($filterAbleField['fieldName']);
-        }
-
-        return $filterAbleFields;
+        return $this->prepareListResult($result);
     }
 
     public function getNewOrderNumber(): int
@@ -127,13 +121,45 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
         return ++$highestOrderNumber;
     }
 
-    private function getValuesForFilterableField(string $fieldName): array
+    public function getExportList(int $limit, int $offset): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('DISTINCT ' . $fieldName)
-            ->from(FossilRepositoryInterface::FOSSIL_TABLE_NAME)
+            ->select(['*'])
+            ->from(self::FORM_FIELD_TABLE_NAME)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->executeQuery()
-            ->fetchFirstColumn();
+            ->fetchAllAssociative();
+    }
+
+    public function getColumnCount(): int
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select(['COUNT(id)'])
+            ->from(self::FORM_FIELD_TABLE_NAME)
+            ->executeQuery()
+            ->fetchOne();
+
+        if (!is_numeric($result)) {
+            throw new IsNotNumericException($this);
+        }
+
+        return (int) $result;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $result
+     *
+     * @return array<FossilFormField>
+     */
+    private function prepareListResult(array $result): array
+    {
+        $array = [];
+        foreach ($result as $fossilFormField) {
+            $array[] = (new FossilFormField())->fromArray($fossilFormField);
+        }
+
+        return $array;
     }
 
     private function createInsertUpdateQueryBuilder(
@@ -164,32 +190,31 @@ class FossilFormFieldRepository implements FossilFormFieldRepositoryInterface, R
             ->setParameter('fieldLabel', $fossilFormField->getFieldLabel())
             ->setParameter('fieldType', $fossilFormField->getFieldType())
             ->setParameter('fieldOrder', $fossilFormField->getFieldOrder())
-            ->setParameter('showInOverview', (int)$fossilFormField->getShowInOverview())
-            ->setParameter('allowBlank', (int)$fossilFormField->getAllowBlank())
-            ->setParameter('isFilter', (int)$fossilFormField->getIsFilter())
-            ->setParameter('isRequiredDefault', (int)$fossilFormField->getIsRequiredDefault());
+            ->setParameter('showInOverview', (int) $fossilFormField->getShowInOverview())
+            ->setParameter('allowBlank', (int) $fossilFormField->getAllowBlank())
+            ->setParameter('isFilter', (int) $fossilFormField->getIsFilter())
+            ->setParameter('isRequiredDefault', (int) $fossilFormField->getIsRequiredDefault());
 
         return $queryBuilder;
     }
 
+//    public function getFilterableFieldsPopulatedWithValues(): array
+//    {
+//        $filterAbleFields = $this->getFilterableFields();
+//
+//        foreach ($filterAbleFields as &$filterAbleField) {
+//            $filterAbleField->setValue($this->getValuesForFilterableField($filterAbleField['fieldName']));
+//        }
+//
+//        return $filterAbleFields;
+//    }
 
-    public function getExportList(int $limit, int $offset): array
-    {
-        return $this->connection->createQueryBuilder()
-            ->select(['*'])
-            ->from(self::FORM_FIELD_TABLE_NAME)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->executeQuery()
-            ->fetchAllAssociative();
-    }
-
-    public function getColumnCount(): int
-    {
-        return $this->connection->createQueryBuilder()
-            ->select(['COUNT(id)'])
-            ->from(self::FORM_FIELD_TABLE_NAME)
-            ->executeQuery()
-            ->fetchOne();
-    }
+//    private function getValuesForFilterableField(string $fieldName): array
+//    {
+//        return $this->connection->createQueryBuilder()
+//            ->select('DISTINCT ' . $fieldName)
+//            ->from(FossilRepositoryInterface::FOSSIL_TABLE_NAME)
+//            ->executeQuery()
+//            ->fetchFirstColumn();
+//    }
 }

@@ -18,7 +18,7 @@ class ExportController extends AbstractController
 {
     #[Route('/admin/export/overview', name: 'app_admin_export_overview')]
     public function exportOverview(
-        ExportServiceInterface $exportService,
+        ExportServiceInterface          $exportService,
         ImportExportRepositoryInterface $importExportRepository
     ): Response {
         return $this->render('admin/Export/overview.html.twig', [
@@ -55,7 +55,7 @@ class ExportController extends AbstractController
 
     #[Route('/admin/export/zip', name: 'app_admin_export_zip')]
     public function exportZip(
-        Request $request,
+        Request                $request,
         ExportServiceInterface $exportService
     ): JsonResponse {
         $directory = $request->get('directory');
@@ -70,7 +70,7 @@ class ExportController extends AbstractController
         }
 
         try {
-            $zipFile = $exportService->createZipFile($directory, $fileName, $request->get('zipImages'));
+            $zipFile = $exportService->createZipFile($directory, $fileName);
         } catch (\Exception $exception) {
             return new JsonResponse(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
@@ -101,10 +101,13 @@ class ExportController extends AbstractController
 
     #[Route('/admin/export/zip/delete', name: 'app_admin_delete_export_zip')]
     public function deleteExportZip(
-        Request $request,
+        Request                $request,
         ExportServiceInterface $exportService
     ): JsonResponse {
         $directory = $request->get('directory');
+        if (!is_string($directory)) {
+            return new JsonResponse(['message' => 'Directory string not given'], Response::HTTP_BAD_REQUEST);
+        }
 
         $exportService->deleteBackup($directory);
 

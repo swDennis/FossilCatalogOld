@@ -25,4 +25,6 @@ interface InstallationServiceInterface
     public function createInstallLockFile(): void;
 
     public function createDonEnvFile(InstallationData $installationData): bool;
+
+    public function createAppSecret(): string;
 }

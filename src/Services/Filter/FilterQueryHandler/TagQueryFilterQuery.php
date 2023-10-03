@@ -10,12 +10,13 @@ class TagQueryFilterQuery extends AbstractArrayQueryFilter implements FilterQuer
 {
     public function __construct(
         private readonly Connection $connection
-    ) {
-
-    }
+    ) {}
 
     private const FILTER_NAME = 'tags';
 
+    /**
+     * @param array<array<int>> $filter
+     */
     public function addFilter(array $filter, QueryBuilder $queryBuilder): void
     {
         if (!array_key_exists(self::FILTER_NAME, $filter) || !is_array($filter[self::FILTER_NAME])) {

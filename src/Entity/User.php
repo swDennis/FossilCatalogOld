@@ -18,6 +18,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    /**
+     * @var array<int, string>
+     */
     #[ORM\Column]
     private array $roles = [];
 
@@ -66,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array<int, string> $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -78,6 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
     {
+        /** @phpstan-ignore-next-line */
         return $this->password;
     }
 
@@ -91,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;

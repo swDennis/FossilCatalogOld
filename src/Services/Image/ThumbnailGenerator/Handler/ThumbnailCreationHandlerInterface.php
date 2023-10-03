@@ -4,7 +4,7 @@ namespace App\Services\Image\ThumbnailGenerator\Handler;
 
 interface ThumbnailCreationHandlerInterface
 {
-    public const THUMBNAIL_WIDTH = 200;
+    public const THUMBNAIL_WIDTH = 400;
 
     public const MIMETYPE_JPG = 'image/jpeg';
 

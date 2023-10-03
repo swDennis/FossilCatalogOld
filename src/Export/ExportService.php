@@ -17,14 +17,15 @@ use ZipArchive;
 
 class ExportService implements ExportServiceInterface
 {
-    private const LOCK_FILE_SESSION_KEY = 'exportLockFile';
-
     private const TARGET_DIRECTORY_SESSION_KEY = 'exportTargetDirectory';
 
     protected string $targetDirectory;
 
     protected string $lockFile;
 
+    /**
+     * @var array<AbstractHandler>
+     */
     private array $handler;
 
     public function __construct(
@@ -109,7 +110,6 @@ class ExportService implements ExportServiceInterface
             throw new CreateZipException('Cannot create zip file for backup');
         }
 
-        /** @var AbstractHandler $exportHandler */
         foreach ($this->handler as $handler) {
             $handlerFile = $this->createFileName($directory, $handler->getFileName());
             if (!is_file($handlerFile)) {
@@ -172,7 +172,7 @@ class ExportService implements ExportServiceInterface
         return $lockFile;
     }
 
-    private function createDirectory(string $directory)
+    private function createDirectory(string $directory): void
     {
         if (is_dir($directory)) {
             return;

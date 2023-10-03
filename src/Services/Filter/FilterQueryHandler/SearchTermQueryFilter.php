@@ -15,9 +15,12 @@ class SearchTermQueryFilter implements FilterQueryHandlerInterface
 
     }
 
+    /**
+     * @param array<string,string> $filter
+     */
     public function addFilter(array $filter, QueryBuilder $queryBuilder): void
     {
-        if (!array_key_exists(self::FILTER_NAME, $filter) || $filter[self::FILTER_NAME] === null) {
+        if (!array_key_exists(self::FILTER_NAME, $filter) || empty($filter[self::FILTER_NAME])) {
             return;
         }
 
@@ -30,11 +33,11 @@ class SearchTermQueryFilter implements FilterQueryHandlerInterface
             $isFirst = true;
             foreach ($filterFields as $filterField) {
                 if ($isFirst) {
-                    $queryBuilder->andWhere($filterField['fieldName'] . ' LIKE :searchTerm');
+                    $queryBuilder->andWhere($filterField->getFieldName() . ' LIKE :searchTerm');
                     $isFirst = false;
                 }
 
-                $queryBuilder->orWhere($filterField['fieldName'] . ' LIKE :searchTerm');
+                $queryBuilder->orWhere($filterField->getFieldName() . ' LIKE :searchTerm');
             }
 
             $queryBuilder->setParameter('searchTerm', $searchTerm);

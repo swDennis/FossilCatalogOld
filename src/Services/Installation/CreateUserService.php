@@ -38,7 +38,7 @@ class CreateUserService implements CreateUserServiceInterface
             $this->entityManager->persist($user);
             $this->entityManager->flush();
         } catch (\Exception $exception) {
-            throw new CreateUserException($user->getEmail(), $exception);
+            throw new CreateUserException((string) $user->getEmail(), $exception);
         }
     }
 }

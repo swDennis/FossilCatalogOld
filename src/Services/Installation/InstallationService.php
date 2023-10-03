@@ -33,7 +33,9 @@ class InstallationService implements InstallationServiceInterface
     public function createDonEnvFile(InstallationData $installationData): bool
     {
         $dotEnvContent = \file_get_contents(self::DOT_ENV_DIST);
-
+        if (!is_string($dotEnvContent)) {
+            throw new \UnexpectedValueException(sprintf('Cannot read content of %s', self::DOT_ENV_DIST));
+        }
         // mysql://root:root@mysql:3306/fossils
         $databaseConnectionString = sprintf(
             'mysql://%s:%s@%s:%s/%s',

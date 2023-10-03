@@ -23,18 +23,18 @@ class FossilFormEntityDatabaseCreator
     public function addDatabaseColumns(): void
     {
         foreach ($this->fossilFormFieldRepository->getFossilFormFieldList() as $formField) {
-            if ($this->checkIfColumnExist(self::FOSSIL_DATABASE_TABLE_NAME, $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME])) {
+            if ($this->checkIfColumnExist(self::FOSSIL_DATABASE_TABLE_NAME, $formField->getFieldName())) {
                 continue;
             }
 
             $this->createDatabaseField(
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_TYPE]
+                $formField->getFieldName(),
+                $formField->getFieldType()
             );
 
-            if (!$this->checkIfColumnExist(self::FOSSIL_DATABASE_TABLE_NAME, $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME])) {
+            if (!$this->checkIfColumnExist(self::FOSSIL_DATABASE_TABLE_NAME, $formField->getFieldName())) {
                 throw new CreateColumException(
-                    $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
+                    $formField->getFieldName(),
                     self::FOSSIL_DATABASE_TABLE_NAME
                 );
             }
@@ -60,7 +60,7 @@ class FossilFormEntityDatabaseCreator
         }
     }
 
-    private function createFulltextIndex()
+    private function createFulltextIndex(): void
     {
         $sqlTemplate ='ALTER TABLE %s ADD FULLTEXT %s(%s);';
         $filterableFields = $this->fossilFormFieldRepository->getFilterableFields();
@@ -93,7 +93,7 @@ class FossilFormEntityDatabaseCreator
         }
     }
 
-    private function createSql(string $columName, string $type)
+    private function createSql(string $columName, string $type): string
     {
         $sql = $this->createAddColumnStatement($columName, $type);
 
@@ -121,7 +121,7 @@ class FossilFormEntityDatabaseCreator
         );
     }
 
-    private function createAddIndexStatement(string $columName, string $type)
+    private function createAddIndexStatement(string $columName, string $type): string
     {
         $sqlAddIndexTemplate = 'ALTER TABLE %s ADD INDEX %s (%s);';
 
@@ -150,7 +150,7 @@ class FossilFormEntityDatabaseCreator
         }
     }
 
-    private function checkIfColumnExist($tableName, $columnName): bool
+    private function checkIfColumnExist(string $tableName, string $columnName): bool
     {
         $sql = sprintf('SHOW COLUMNS FROM `%s` LIKE ?', $tableName);
 

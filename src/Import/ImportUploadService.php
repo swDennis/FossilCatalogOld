@@ -11,14 +11,18 @@ class ImportUploadService implements ImportUploadServiceInterface
 {
     public function __construct(
         private readonly KernelInterface $appKernel
-    ) {
-
-    }
+    ) {}
 
     public function moveToImportDirectory(Request $request, string $formName, string $fileKey): File
     {
+        $form = $request->files->get($formName);
+
+        if (!is_array($form) || !array_key_exists($fileKey, $form)) {
+            throw new \UnexpectedValueException(sprintf('Cannot access %s of form to get files', $fileKey));
+        }
+
         /** @var UploadedFile $uploadedTmpFiles */
-        $uploadedTmpFiles = $request->files->get($formName)[$fileKey];
+        $uploadedTmpFiles = $form[$fileKey];
 
         return $uploadedTmpFiles->move($this->createDirectoryPath(), $uploadedTmpFiles->getClientOriginalName());
     }
