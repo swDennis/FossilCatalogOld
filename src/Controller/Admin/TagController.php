@@ -19,7 +19,7 @@ class TagController extends AbstractController
         TagRepositoryInterface $tagRepository
     ): Response {
         return $this->render('admin/tag/list.html.twig', [
-            'tagList' => $tagRepository->getList(TagRepositoryInterface::GET_ALL),
+            'tagList' => $tagRepository->getList(TagRepositoryInterface::GET_ALL, []),
         ]);
     }
 
@@ -29,7 +29,12 @@ class TagController extends AbstractController
         TagRepositoryInterface $tagRepository,
         TagFormInterface $tagForm
     ): Response {
-        $tagId = (int) $request->get('id');
+        $id = $request->get('id');
+        if (!is_numeric($id)) {
+            $id = null;
+        }
+
+        $tagId = (int) $id;
 
         $tag = new Tag();
         $formBuilder = $this->createFormBuilder($tag);
@@ -39,10 +44,10 @@ class TagController extends AbstractController
         $form = $tagForm->createForm($formBuilder, $this->generateUrl('app_admin_tag_create_or_edit'), $tagInfo);
 
         if ($tagId) {
-            $tagArray = $tagRepository->getById($tagId);
-            if (!empty($tagArray)) {
-                $form->submit($tagArray);
-                $tag->fromArray($tagArray);
+            $existingTag = $tagRepository->getById($tagId);
+            if ($existingTag instanceof Tag) {
+//                $form->submit($existingTag);
+                $tag = $existingTag;
             }
         }
 
@@ -70,7 +75,12 @@ class TagController extends AbstractController
         Request $request,
         TagRepositoryInterface $tagRepository
     ): JsonResponse {
-        $tagId = (int) $request->get('id');
+        $id = $request->get('id');
+        if (!is_numeric($id)) {
+            $id = null;
+        }
+
+        $tagId = (int) $id;
         if (!$tagId) {
             return new JsonResponse(['message' => 'No "tagId" provided'], Response::HTTP_BAD_REQUEST);
         }
@@ -94,10 +104,14 @@ class TagController extends AbstractController
         $values = $request->get('values');
 
         return new JsonResponse([
+            /** @phpstan-ignore-next-line */
             'tags' => $tagRepository->getTagsThatAreAssignedToFossils($selectField, explode(',', $values)),
         ]);
     }
 
+    /**
+     * @return array<string, string|int>
+     */
     private function getPostData(Request $request, string $formName): array
     {
         $postData = $request->get($formName);

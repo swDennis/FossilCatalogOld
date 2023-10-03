@@ -16,7 +16,7 @@ class MysqlKeywordConstraintValidator extends ConstraintValidator
     ) {
     }
 
-    public function validate(mixed $value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof MysqlKeywordConstraint) {
             throw new UnexpectedTypeException($constraint, MysqlKeywordConstraint::class);
@@ -26,7 +26,7 @@ class MysqlKeywordConstraintValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        if (null === $value || '' === $value) {
+        if ('' === $value) {
             return;
         }
 

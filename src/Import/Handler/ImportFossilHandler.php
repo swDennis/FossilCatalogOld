@@ -12,8 +12,8 @@ class ImportFossilHandler extends AbstractImportHandler
 {
     public function __construct(
         private readonly RequestStack                       $requestStack,
-        private readonly FossilRepositoryInterface          $fossilRepository,
-        private readonly FossilFormFieldRepositoryInterface $fossilFormFieldRepository
+        private readonly FossilRepositoryInterface          $fossilRepository
+//        private readonly FossilFormFieldRepositoryInterface $fossilFormFieldRepository
     ) {
         parent::__construct($this->requestStack);
     }
@@ -33,13 +33,16 @@ class ImportFossilHandler extends AbstractImportHandler
         $this->status = $this->getStatusFromSession();
 
         $file = fopen($this->status->getFile(), 'rb');
+        if (!$file) {
+            throw new \UnexpectedValueException('Expects file to import fossils');
+        }
 
         $offset = $this->status->getImported();
         for ($i = 0; $i < $offset; $i++) {
             fgets($file);
         }
 
-        $fields = $this->fossilFormFieldRepository->getFossilFormFieldList();
+//        $fields = $this->fossilFormFieldRepository->getFossilFormFieldList();
 
         $lineCounter = 0;
         for ($i = 0; $i < self::IMPORT_LIMIT; $i++) {
@@ -48,9 +51,15 @@ class ImportFossilHandler extends AbstractImportHandler
                 break;
             }
 
-            $fossil = new FossilEntity();
-            $fossil->fromArray(json_decode($line, true));
+            $array = json_decode($line, true);
+            if (!is_array($array)) {
+                throw new \UnexpectedValueException('Expect array got ' . gettype($array));
+            }
 
+            $fossil = new FossilEntity();
+            $fossil->fromArray($array);
+
+            /** @phpstan-ignore-next-line */
             $this->fossilRepository->saveFossil($fossil, true);
 
             $lineCounter++;

@@ -2,6 +2,7 @@
 
 namespace App\Services\FossilForm;
 
+use App\Entity\FossilFormField;
 use App\Repository\FossilFormFieldRepositoryInterface;
 
 class FossilFormEntityCreator
@@ -34,6 +35,9 @@ class FossilFormEntityCreator
         file_put_contents(self::FOSSIL_ENTITY_FILE, $renderedEntityCode, LOCK_EX);
     }
 
+    /**
+     * @param array<FossilFormField> $formFields
+     */
     private function createSetterString(array $formFields): string
     {
         $template = "%spublic function set%s(?string $%s): void%s\t{%s\t\t\$this->%s = $%s;%s\t}" . PHP_EOL . PHP_EOL;
@@ -44,12 +48,12 @@ class FossilFormEntityCreator
             $result .= sprintf(
                 $template,
                 $first ? '' : "\t",
-                ucfirst($formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME]),
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
+                ucfirst($formField->getFieldName()),
+                $formField->getFieldName(),
                 PHP_EOL,
                 PHP_EOL,
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
+                $formField->getFieldName(),
+                $formField->getFieldName(),
                 PHP_EOL
             );
 
@@ -59,6 +63,9 @@ class FossilFormEntityCreator
         return $result;
     }
 
+    /**
+     * @param array<FossilFormField> $formFields
+     */
     private function createGetterString(array $formFields): string
     {
         $template = "%spublic function get%s(): ?string%s\t{%s \t\treturn \$this->%s;%s\t}" . PHP_EOL . PHP_EOL;
@@ -68,10 +75,10 @@ class FossilFormEntityCreator
             $result .= sprintf(
                 $template,
                 $first ? '' : "\t",
-                ucfirst($formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME]),
+                ucfirst($formField->getFieldName()),
                 PHP_EOL,
                 PHP_EOL,
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
+                $formField->getFieldName(),
                 PHP_EOL
             );
 
@@ -81,6 +88,9 @@ class FossilFormEntityCreator
         return $result;
     }
 
+    /**
+     * @param array<FossilFormField> $formFields
+     */
     private function createPropertiesString(array $formFields): string
     {
         $template = "%sprotected ?string $%s = null;" . PHP_EOL . PHP_EOL;
@@ -90,7 +100,7 @@ class FossilFormEntityCreator
             $result .= sprintf(
                 $template,
                 $first ? '' : "\t",
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME]
+                $formField->getFieldName()
             );
 
             $first = false;

@@ -6,6 +6,9 @@ class Images
 {
     protected ?int $fossilId = null;
 
+    /**
+     * @var array<mixed>
+     */
     protected array $images = [];
 
     /**
@@ -25,7 +28,7 @@ class Images
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getImages(): array
     {
@@ -33,7 +36,7 @@ class Images
     }
 
     /**
-     * @param array $images
+     * @param array<mixed> $images
      */
     public function setImages(array $images): void
     {

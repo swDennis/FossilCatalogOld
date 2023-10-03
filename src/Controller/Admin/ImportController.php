@@ -53,7 +53,7 @@ class ImportController extends AbstractController
         Request $request,
         ImportFileValidatorInterface $importFileValidator,
         ImportServiceInterface $importService
-    ) {
+    ): Response {
         $file = $request->get('importFile');
         if (!is_string($file) || !is_file($file)) {
             $this->addFlash('Failure', 'Cannot read import file: ' . $file);
@@ -98,11 +98,11 @@ class ImportController extends AbstractController
         ImportServiceInterface $importService
     ): JsonResponse {
         try {
-            $status = $importService->clearSession();
+            $importService->clearSession();
         } catch (Exception $exception) {
             return new JsonResponse(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(['message' => 'ok', 'status' => $status], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'ok'], Response::HTTP_OK);
     }
 }

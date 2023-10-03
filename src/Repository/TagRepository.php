@@ -3,15 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\Tag;
+use App\Exceptions\IsNotNumericException;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
 class TagRepository implements TagRepositoryInterface, RepositoryInterface
 {
-    public function __construct(public readonly Connection $connection)
-    {
-    }
+    public function __construct(public readonly Connection $connection) {}
 
     public function saveTag(Tag $tag, ?bool $isNew = null): Tag
     {
@@ -26,8 +25,8 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             return $tag;
         }
 
-        $id = $this->connection->lastInsertId();
-        if ($id === false) {
+        $id = (int) $this->connection->lastInsertId();
+        if (empty($id)) {
             throw new \RuntimeException('Could not create Tag entity');
         }
 
@@ -51,14 +50,17 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             ->executeQuery();
     }
 
-    public function getList(?string $filter = null, ?array $ids = null): array
+    /**
+     * @return array<int, Tag>
+     */
+    public function getList(string $filter, ?array $ids = null): array
     {
         $queryBuilder = $this->connection->createQueryBuilder()
             ->select(['*'])
             ->from(self::TABLE_NAME)
             ->orderBy(self::COLUMN_NAME, 'ASC');
 
-        if (is_array($ids)) {
+        if (is_array($ids) && !empty($ids)) {
             $queryBuilder->andWhere('id IN (:ids)')
                 ->setParameter('ids', $ids, ArrayParameterType::INTEGER);
         }
@@ -75,29 +77,18 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  0');
         }
 
-        return $queryBuilder->executeQuery()->fetchAllAssociative();
-    }
+        $result = $queryBuilder->executeQuery()->fetchAllAssociative();
 
-    public function getExportList(int $limit, int $offset, string $filter): array
-    {
-        $queryBuilder = $this->connection->createQueryBuilder()
-            ->select(['*'])
-            ->from(self::TABLE_NAME)
-            ->setMaxResults($limit)
-            ->setFirstResult($offset);
-
-        if ($filter === self::GET_ONLY_CATEGORIES) {
-            $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  1');
+        $array = [];
+        foreach ($result as $item) {
+            $array[] = (new Tag())->fromArray($item);
         }
 
-        if ($filter === self::GET_ONLY_TAGS) {
-            $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  0');
-        }
-
-        return $queryBuilder->executeQuery()->fetchAllAssociative();
+        return $array;
     }
 
-    public function getById(int $id): array
+
+    public function getById(int $id): ?Tag
     {
         $result = $this->connection->createQueryBuilder()
             ->select(['*'])
@@ -108,32 +99,29 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             ->fetchAssociative();
 
         if (!is_array($result)) {
-            return [];
+            return null;
         }
 
-        return $result;
+        return (new Tag())->fromArray($result);
     }
+
 
     public function getByFossilId(int $fossilId, ?string $filter): array
     {
-        return $this->getByFossilIds([$fossilId], $filter);
+        $result = $this->getByFossilIds([$fossilId], $filter);
+
+        return $result[$fossilId];
     }
+
 
     public function getByFossilIds(array $fossilIds, ?string $filter): array
     {
-        $tagIds = $this->connection->createQueryBuilder()
-            ->select(['tagId'])
-            ->from('tag_fossil')
-            ->where('fossilId IN (:fossilIds)')
-            ->setParameter('fossilIds', $fossilIds, ArrayParameterType::INTEGER)
-            ->executeQuery()
-            ->fetchFirstColumn();
-
         $queryBuilder = $this->connection->createQueryBuilder()
-            ->select(['*'])
-            ->from(self::TABLE_NAME)
-            ->where('id IN (:tagIds)')
-            ->setParameter('tagIds', $tagIds, ArrayParameterType::INTEGER);
+            ->select(['tag.id as id', 'tag.name as name', 'tag.isUsedAsCategory as isUsedAsCategory', 'relation.fossilId as fossilId'])
+            ->from(self::TABLE_NAME, 'tag')
+            ->join('tag', TagCategoryRelationRepositoryInterface::TABLE_NAME, 'relation', 'tag.id = relation.tagId')
+            ->where('relation.fossilId IN (:fossilIds)')
+            ->setParameter('fossilIds', $fossilIds, ArrayParameterType::INTEGER);
 
         if ($filter === self::GET_ONLY_CATEGORIES) {
             $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  1');
@@ -143,7 +131,23 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  0');
         }
 
-        return $queryBuilder->executeQuery()->fetchAllAssociative();
+        $result = $queryBuilder->executeQuery()->fetchAllAssociative();
+
+        $array = [];
+        foreach ($result as $tagOrCategory) {
+            $fossilId = $tagOrCategory['fossilId'];
+            if (!is_numeric($fossilId)) {
+                throw new IsNotNumericException($this);
+            }
+            unset($tagOrCategory['fossilId']);
+            if (!array_key_exists((int) $fossilId, $array)) {
+                $array[$fossilId] = [];
+            }
+
+            $array[$fossilId][] = (new Tag())->fromArray($tagOrCategory);
+        }
+
+        return $array;
     }
 
     public function getTagColumnCount(?string $filter): int
@@ -160,8 +164,14 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  0');
         }
 
-        return (int) $queryBuilder->executeQuery()->fetchOne();
+        $result = $queryBuilder->executeQuery()->fetchOne();
+        if (!is_numeric($result)) {
+            throw new IsNotNumericException($this);
+        }
+
+        return (int) $result;
     }
+
 
     public function getTagsThatAreAssignedToFossils(string $current, ?array $selected = null): array
     {
@@ -195,10 +205,36 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  0');
         }
 
+        $result = $queryBuilder->executeQuery()->fetchAllAssociative();
+
+        $array = [];
+        foreach ($result as $tagOrCategory) {
+            $array[] = (new Tag())->fromArray($tagOrCategory);
+        }
+
+        return $array;
+    }
+
+    public function getExportList(int $limit, int $offset, string $filter): array
+    {
+        $queryBuilder = $this->connection->createQueryBuilder()
+            ->select(['*'])
+            ->from(self::TABLE_NAME)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
+
+        if ($filter === self::GET_ONLY_CATEGORIES) {
+            $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  1');
+        }
+
+        if ($filter === self::GET_ONLY_TAGS) {
+            $queryBuilder->andWhere(self::COLUMN_IS_USED_AS_CATEGORY . ' =  0');
+        }
+
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 
-    private function getFilter(string $current): ?string
+    private function getFilter(string $current): string
     {
         switch ($current) {
             case 'categories':
@@ -232,6 +268,5 @@ class TagRepository implements TagRepositoryInterface, RepositoryInterface
             ->setParameter('isUsedAsCategory', (int) $tag->getIsUsedAsCategory());
 
         return $queryBuilder;
-
     }
 }

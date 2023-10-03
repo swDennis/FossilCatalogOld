@@ -12,11 +12,18 @@ class PngHandler implements ThumbnailCreationHandlerInterface
     public function create(string $imageSourcePath, string $thumbnailTargetPath): void
     {
         $sourceImage = imagecreatefrompng($imageSourcePath);
+        if (!$sourceImage instanceof \GdImage) {
+            throw new \UnexpectedValueException(sprintf('$sourceImage: Cannot initiate GdImage for file %s', $imageSourcePath));
+        }
+
         $orgWidth = imagesx($sourceImage);
         $orgHeight = imagesy($sourceImage);
 
         $thumbHeight = floor($orgHeight * (self::THUMBNAIL_WIDTH / $orgWidth));
-        $destImage = imagecreatetruecolor(self::THUMBNAIL_WIDTH, $thumbHeight);
+        $destImage = imagecreatetruecolor(self::THUMBNAIL_WIDTH, (int) $thumbHeight);
+        if (!$destImage instanceof \GdImage) {
+            throw new \UnexpectedValueException(sprintf('$destImage: Cannot initiate GdImage for file %s', $imageSourcePath));
+        }
 
         imagecopyresampled(
             $destImage,
@@ -26,7 +33,7 @@ class PngHandler implements ThumbnailCreationHandlerInterface
             0,
             0,
             self::THUMBNAIL_WIDTH,
-            $thumbHeight,
+            (int) $thumbHeight,
             $orgWidth,
             $orgHeight
         );

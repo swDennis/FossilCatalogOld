@@ -19,7 +19,7 @@ class OverviewController extends AbstractController
             'fossilCount' => $fossilRepository->getFossilListColumnCount([]),
             'categoryCount' => $tagRepository->getTagColumnCount(TagRepositoryInterface::GET_ONLY_CATEGORIES),
             'tagCount' => $tagRepository->getTagColumnCount(TagRepositoryInterface::GET_ONLY_TAGS),
-            'categories' => $tagRepository->getList(TagRepositoryInterface::GET_ONLY_CATEGORIES),
+            'categories' => $tagRepository->getList(TagRepositoryInterface::GET_ONLY_CATEGORIES, []),
         ]);
     }
 }

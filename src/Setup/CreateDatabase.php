@@ -6,6 +6,7 @@ use App\Entity\InstallationData;
 use App\Exceptions\DatabaseCreationException;
 use App\Exceptions\DatabaseExistsException;
 use PDO;
+use PDOStatement;
 
 class CreateDatabase implements CreateDatabaseInterface
 {
@@ -19,7 +20,7 @@ class CreateDatabase implements CreateDatabaseInterface
 
         $connection->exec($sql);
 
-        if (!$this->checkIfDatabaseExists($connection, $installationData->getDatabaseName())) {
+        if ($this->checkIfDatabaseExists($connection, $installationData->getDatabaseName()) === false) {
             throw new DatabaseCreationException($installationData->getDatabaseName());
         }
     }
@@ -28,7 +29,12 @@ class CreateDatabase implements CreateDatabaseInterface
     {
         $sql = sprintf('SHOW DATABASES LIKE "%s";', $databaseName);
 
-        $result = $connection->query($sql)->fetchColumn();
+        $query = $connection->query($sql);
+        if (!$query instanceof PDOStatement) {
+            throw new \UnexpectedValueException('Cannot init PDOStatement');
+        }
+
+        $result = $query->fetchColumn();
 
         if (is_string($result)) {
             return true;

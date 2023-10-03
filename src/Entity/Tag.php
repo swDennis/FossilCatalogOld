@@ -7,9 +7,9 @@ class Tag extends AbstractStruct
 {
     protected ?int $id = null;
 
-    protected ?string $name = null;
+    protected string $name;
 
-    protected ?bool $isUsedAsCategory = null;
+    protected bool $isUsedAsCategory;
 
     public function getId(): ?int
     {
@@ -21,12 +21,12 @@ class Tag extends AbstractStruct
         $this->id = $id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -36,9 +36,8 @@ class Tag extends AbstractStruct
         return $this->isUsedAsCategory;
     }
 
-    public function setIsUsedAsCategory(?bool $isUsedAsCategory): void
+    public function setIsUsedAsCategory(bool $isUsedAsCategory): void
     {
         $this->isUsedAsCategory = $isUsedAsCategory;
     }
-
 }

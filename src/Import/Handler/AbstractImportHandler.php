@@ -15,9 +15,7 @@ abstract class AbstractImportHandler
 
     public function __construct(
         private readonly RequestStack $requestStack
-    ) {
-
-    }
+    ) {}
 
     abstract public function import(): ImportStatus;
 
@@ -38,7 +36,7 @@ abstract class AbstractImportHandler
         return $this->status;
     }
 
-    public function clearSession()
+    public function clearSession(): void
     {
         $this->requestStack->getSession()->remove($this->getKey());
     }
@@ -50,7 +48,12 @@ abstract class AbstractImportHandler
 
     protected function getStatusFromSession(): ImportStatus
     {
-        return (new ImportStatus($this->getKey(), ''))->fromArray($this->requestStack->getSession()->get($this->getKey(), []));
+        $array = $this->requestStack->getSession()->get($this->getKey(), []);
+        if (!is_array($array)) {
+            throw new \UnexpectedValueException('Expect array got ' . gettype($array));
+        }
+
+        return (new ImportStatus($this->getKey(), ''))->fromArray($array);
     }
 
     protected function saveSession(): void
@@ -59,7 +62,7 @@ abstract class AbstractImportHandler
     }
 
 
-    protected function createFullPath(string $directory, string $fileName)
+    protected function createFullPath(string $directory, string $fileName): string
     {
         return sprintf('%s/%s', $directory, $fileName);
     }
@@ -68,6 +71,10 @@ abstract class AbstractImportHandler
     {
         $linecount = 0;
         $file = fopen($importFile, 'rb');
+        if (!$file) {
+            throw new \UnexpectedValueException('Expects file for line count got ' . gettype($file));
+        }
+
         while (!feof($file)) {
             $line = fgets($file);
             if (!$line) {

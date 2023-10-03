@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Fossil;
 use App\Entity\FossilEntity;
+use App\Exceptions\IsNotNumericException;
 use App\Services\Filter\FilterQueryQueryFactory;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -11,13 +12,12 @@ use Doctrine\DBAL\Query\QueryBuilder;
 class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
 {
     public function __construct(
-        private readonly Connection $connection,
-        private readonly FilterQueryQueryFactory $filterFactory,
+        private readonly Connection                         $connection,
+        private readonly FilterQueryQueryFactory            $filterFactory,
         private readonly FossilFormFieldRepositoryInterface $fossilFormFieldRepository,
-        private readonly ImageRepositoryInterface $imageRepository,
-        private readonly TagRepositoryInterface $tagRepository
-    ) {
-    }
+        private readonly ImageRepositoryInterface           $imageRepository,
+        private readonly TagRepositoryInterface             $tagRepository
+    ) {}
 
     public function saveFossil(FossilEntity $fossil, ?bool $isNew = null): FossilEntity
     {
@@ -40,14 +40,14 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
             throw new \RuntimeException('Could not create Fossil entity');
         }
 
-        $fossil->setId($id);
+        $fossil->setId((int) $id);
 
         $this->addCategoriesAndTags($fossil);
 
         return $fossil;
     }
 
-    public function getFossilById(int $id): array
+    public function getFossilById(int $id): ?FossilEntity
     {
         $fossil = $this->connection->createQueryBuilder()
             ->select(['*'])
@@ -58,14 +58,20 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
             ->fetchAssociative();
 
         if (empty($fossil)) {
-            return [];
+            return null;
         }
 
-        $fossil['images'] = $this->imageRepository->getImagesByFossilId($fossil['id']);
-        $fossil['categories'] = $this->tagRepository->getByFossilId($fossil['id'], TagRepositoryInterface::GET_ONLY_CATEGORIES);
-        $fossil['tags'] = $this->tagRepository->getByFossilId($fossil['id'], TagRepositoryInterface::GET_ONLY_TAGS);
+        $fossilEntity = (new FossilEntity())->fromArray($fossil);
+        $fossilId = $fossilEntity->getId();
+        if ($fossilId === null) {
+            return $fossilEntity;
+        }
 
-        return $fossil;
+        $fossilEntity->setImages($this->imageRepository->getImagesByFossilId($fossilId));
+        $fossilEntity->setCategories($this->tagRepository->getByFossilId($fossilId, TagRepositoryInterface::GET_ONLY_CATEGORIES));
+        $fossilEntity->setTags($this->tagRepository->getByFossilId($fossilId, TagRepositoryInterface::GET_ONLY_TAGS));
+
+        return $fossilEntity;
     }
 
     public function getFossilList(array $filter): array
@@ -84,37 +90,34 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
             ->setMaxResults(self::FOSSILS_PER_PAGE)
             ->orderBy('id');
 
-        // Filter search
+
         $this->filterFactory->addFilter($filter, $queryBuilder);
 
         $fossils = $queryBuilder->executeQuery()->fetchAllAssociative();
-        $fossilIds = array_map(function ($fossil) {
-            return $fossil['id'];
-        }, $fossils);
-
-        $images = $this->imageRepository->getImagesForFossils($fossilIds);
-
-        foreach ($fossils as &$fossil) {
-            $fossilImages = array_filter($images, function ($image) use ($fossil) {
-                return $fossil['id'] === $image['fossilId'];
-            });
-
-            $fossil['images'] = $fossilImages;
+        if (empty($fossils)) {
+            return [];
         }
+
+        $fossils = $this->prepareListResult($fossils);
+        $fossilIds = $this->getFossilIds($fossils);
+
+        $this->applyImages($fossilIds, $fossils);
+        $this->applyTags($fossilIds, $fossils);
+        $this->applyCategories($fossilIds, $fossils);
 
         return $fossils;
     }
 
-    public function getExportList(int $limit, int $offset): array
+    /**
+     * @param array<FossilEntity> $fossils
+     *
+     * @return array<int,int>
+     */
+    private function getFossilIds(array $fossils): array
     {
-        return $this->connection->createQueryBuilder()
-            ->select(['*'])
-            ->from(FossilRepositoryInterface::FOSSIL_TABLE_NAME)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->orderBy('id')
-            ->executeQuery()
-            ->fetchAllAssociative();
+        return array_map(function ($fossil) {
+            return (int) $fossil->getId();
+        }, $fossils);
     }
 
     public function getFossilListColumnCount(array $filter): int
@@ -126,8 +129,13 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
 
         $this->filterFactory->addFilter($filter, $queryBuilder);
 
-        return $queryBuilder->executeQuery()
-            ->fetchOne();
+        $result = $queryBuilder->executeQuery()->fetchOne();
+
+        if (!is_numeric($result)) {
+            throw new IsNotNumericException($this);
+        }
+
+        return (int) $result;
     }
 
     public function getColumnList(string $column): array
@@ -149,6 +157,33 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
             ->executeQuery();
     }
 
+    public function getExportList(int $limit, int $offset): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select(['*'])
+            ->from(FossilRepositoryInterface::FOSSIL_TABLE_NAME)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->orderBy('id')
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $result
+     *
+     * @return array<FossilEntity>
+     */
+    private function prepareListResult(array $result): array
+    {
+        $array = [];
+        foreach ($result as $fossilFormField) {
+            $array[] = (new FossilEntity())->fromArray($fossilFormField);
+        }
+
+        return $array;
+    }
+
     private function createInsertUpdateQueryBuilder(FossilEntity $fossil, bool $isNewFossil): QueryBuilder
     {
         $queryBuilder = $this->connection->createQueryBuilder();
@@ -163,7 +198,7 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
         }
 
         foreach ($this->fossilFormFieldRepository->getFossilFormFieldList() as $formField) {
-            $fieldName = $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME];
+            $fieldName = $formField->getFieldName();
             $getter = sprintf('get%s', ucfirst($fieldName));
 
             $queryBuilder->$function($fieldName, sprintf(':%s', $fieldName));
@@ -173,20 +208,21 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
         return $queryBuilder;
     }
 
-    private function addCategoriesAndTags(FossilEntity $fossil)
+    // TODO: Rename function to saveRelationForCategoriesAndTags or something like that
+    private function addCategoriesAndTags(FossilEntity $fossil): void
     {
-        // TODO: Create a better solution for it. This is a hacky one.Check which exists and add only new ones.
+        // TODO: Create a better solution for it. This is a hacky one. Check which exists and add only new ones.
         $this->deleteCategoriesAndTags($fossil->getId());
 
-        $categoryAndTagIds = array_merge($fossil->getCategories(), $fossil->getTags());
+        $categoryAndTags = array_merge($fossil->getCategories(), $fossil->getTags());
 
-        foreach ($categoryAndTagIds as $id) {
+        foreach ($categoryAndTags as $categoryOrTag) {
             $this->connection->createQueryBuilder()
                 ->insert('tag_fossil')
                 ->setValue('fossilId', ':fossilId')
                 ->setValue('tagId', ':tagId')
                 ->setParameter('fossilId', $fossil->getId())
-                ->setParameter('tagId', (int) $id)
+                ->setParameter('tagId', (int) $categoryOrTag->getId())
                 ->executeQuery();
         }
     }
@@ -204,10 +240,50 @@ class FossilRepository implements FossilRepositoryInterface, RepositoryInterface
             ->executeQuery();
     }
 
-    private function applyFilter(QueryBuilder $queryBuilder, array $filter)
+    /**
+     * @param array<int,int>      $fossilIds
+     * @param array<FossilEntity> $fossils
+     */
+    public function applyImages(array $fossilIds, array $fossils): void
     {
+        $images = $this->imageRepository->getImagesForFossils($fossilIds);
 
+        foreach ($fossils as $fossil) {
+            $fossilImages = array_filter($images, function ($image) use ($fossil) {
+                return $fossil->getId() === $image->getFossilId();
+            });
+
+            $fossil->setImages($fossilImages);
+        }
     }
 
+    /**
+     * @param array<int,int>      $fossilIds
+     * @param array<FossilEntity> $fossils
+     */
+    public function applyTags(array $fossilIds, array $fossils): void
+    {
+        $tags = $this->tagRepository->getByFossilIds($fossilIds, TagRepositoryInterface::GET_ONLY_TAGS);
 
+        foreach ($fossils as $fossil) {
+            if (array_key_exists((int) $fossil->getId(), $tags)) {
+                $fossil->setTags($tags[$fossil->getId()]);
+            }
+        }
+    }
+
+    /**
+     * @param array<int,int>      $fossilIds
+     * @param array<FossilEntity> $fossils
+     */
+    public function applyCategories(array $fossilIds, array $fossils): void
+    {
+        $categories = $this->tagRepository->getByFossilIds($fossilIds, TagRepositoryInterface::GET_ONLY_CATEGORIES);
+
+        foreach ($fossils as $fossil) {
+            if (array_key_exists((int) $fossil->getId(), $categories)) {
+                $fossil->setTags($categories[$fossil->getId()]);
+            }
+        }
+    }
 }

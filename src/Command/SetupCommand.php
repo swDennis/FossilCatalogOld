@@ -14,6 +14,7 @@ use App\Setup\CreateDatabaseInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,19 +33,21 @@ class SetupCommand extends Command
 
     protected static $defaultDescription = 'Creates only the Fossil Database and requires the migrations after';
 
-    private CreateDatabase $createDatabase;
+    private CreateDatabaseInterface $createDatabase;
 
+    /** @phpstan-ignore-next-line */
     private UserPasswordHasherInterface $passwordHasher;
 
+    /** @phpstan-ignore-next-line */
     private EntityManagerInterface $entityManager;
 
     private CreateUserServiceInterface $createUserService;
 
     public function __construct(
-        CreateDatabaseInterface $createDatabase,
+        CreateDatabaseInterface     $createDatabase,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $entityManager,
-        CreateUserServiceInterface $createUserService
+        EntityManagerInterface      $entityManager,
+        CreateUserServiceInterface  $createUserService
     ) {
         $this->createDatabase = $createDatabase;
 
@@ -105,6 +108,14 @@ class SetupCommand extends Command
 
         $userPassword = $io->askHidden('Please enter a password for login');
 
+        if (!is_string($userPassword)) {
+            throw new \UnexpectedValueException('Expected password to be a string');
+        }
+        if (!is_string($userEmail)) {
+            throw new \UnexpectedValueException('Expected email to be a string');
+        }
+
+
         $user = $this->createUserService->createUser($userEmail, $userPassword);
         try {
             $this->createUserService->saveUser($user);
@@ -130,8 +141,8 @@ class SetupCommand extends Command
 
         $previousException = $exception->getPrevious();
         if ($previousException instanceof Exception) {
-            $io->error($exception->getPrevious()->getMessage());
-            $io->error($exception->getPrevious()->getTraceAsString());
+            $io->error($exception->getPrevious()?->getMessage() ?? '' );
+            $io->error($exception->getPrevious()?->getTraceAsString() ?? '');
         }
 
         return Command::FAILURE;

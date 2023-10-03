@@ -1,7 +1,32 @@
+body .container,
+body .container-lg,
+body .container-md,
+body .container-sm,
+body .container-xl,
+body .container-xxl {
+    max-width: 2000px;
+    /*margin-left: unset;*/
+    /*margin-right: unset;*/
+}
+
+body .container .card.gallery-header {
+    height: 400px;
+    overflow: hidden;
+}
+
+body .container .card.gallery-header img {
+    height: 400px;
+    object-fit: cover;
+}
+
+.gallery-search {
+    max-width: 400px;
+}
+
 .overlaySpinner {
     vertical-align: middle;
     text-align: center;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
     display: block;
     min-height: 100%;

@@ -78,10 +78,10 @@ class FossilForm extends AbstractType implements FossilFormInterface
 
         foreach ($formFields as $formField) {
             $builder->add(
-                $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_NAME],
-                $this->getFieldTypeClass($formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_TYPE]),
+                $formField->getFieldName(),
+                $this->getFieldTypeClass($formField->getFieldType()),
                 [
-                    'label' => $formField[FossilFormFieldRepositoryInterface::FORM_FIELD_COLUMN_FIELD_LABEL],
+                    'label' => $formField->getFieldLabel(),
                 ]
             );
         }
@@ -89,14 +89,14 @@ class FossilForm extends AbstractType implements FossilFormInterface
         return $builder->getForm();
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Tag::class,
         ]);
     }
 
-    private function getFieldTypeClass(string $type)
+    private function getFieldTypeClass(string $type): string
     {
         switch ($type) {
             case FormFieldType::TEXT_AREA:
@@ -107,30 +107,35 @@ class FossilForm extends AbstractType implements FossilFormInterface
     }
 
     /**
-     * @return array
+     * @return array<string, int>
      */
     public function getCategoryChoiceList(): array
     {
-        $categories = $this->tagRepository->getList(TagRepositoryInterface::GET_ONLY_CATEGORIES);
+        $categories = $this->tagRepository->getList(TagRepositoryInterface::GET_ONLY_CATEGORIES, []);
 
         return $this->getChoiceList($categories);
     }
 
     /**
-     * @return array
+     * @return array<string, int>
      */
     public function getTagChoiceList(): array
     {
-        $tags = $this->tagRepository->getList(TagRepositoryInterface::GET_ONLY_TAGS);
+        $tags = $this->tagRepository->getList(TagRepositoryInterface::GET_ONLY_TAGS, []);
 
         return $this->getChoiceList($tags);
     }
 
-    private function getChoiceList(array $list)
+    /**
+     * @param array<Tag> $list
+     *
+     * @return array<string, int>
+     */
+    private function getChoiceList(array $list): array
     {
         $choiceList = [];
         foreach ($list as $listItem) {
-            $choiceList[$listItem['name']] = $listItem['id'];
+            $choiceList[$listItem->getName()] = (int) $listItem->getId();
         }
 
         return $choiceList;

@@ -14,26 +14,27 @@ class ImageService implements ImageServiceInterface
 
     private ThumbnailGeneratorInterface $thumbnailGenerator;
 
-    private string $basePath;
-
     public function __construct(
-        ImageRepositoryInterface $imageRepository,
+        ImageRepositoryInterface    $imageRepository,
         ThumbnailGeneratorInterface $thumbnailGenerator
     ) {
         $this->imageRepository = $imageRepository;
         $this->thumbnailGenerator = $thumbnailGenerator;
-
-        $this->basePath = dirname(__DIR__, 3) . '/public';
     }
 
     public function saveImagesFromRequest(
         Request $request,
-        string $formName,
-        int $fossilId,
-        bool $isNewFossil = false
+        string  $formName,
+        int     $fossilId,
+        bool    $isNewFossil = false
     ): array {
         $imageEntities = [];
-        $uploadedTmpFiles = $request->files->get($formName)[self::IMAGE_ARRAY_KEY];
+        $files = $request->files->get($formName);
+
+        $uploadedTmpFiles = null;
+        if (is_array($files) && array_key_exists(self::IMAGE_ARRAY_KEY, $files)) {
+            $uploadedTmpFiles = $files[self::IMAGE_ARRAY_KEY];
+        }
 
         if (empty($uploadedTmpFiles)) {
             return $imageEntities;
@@ -68,7 +69,7 @@ class ImageService implements ImageServiceInterface
         $image->setFossilId($fossilId);
         $image->setIsMainImage($isFirst);
         $image->setShowInGallery($isFirst);
-        $image->setMimeType($uploadedFile->getMimeType());
+        $image->setMimeType((string) $uploadedFile->getMimeType());
         $image->setRelativePath($this->createHashedRelativePath($uploadedFile));
 
         $this->createNames($image, $uploadedFile);
@@ -107,6 +108,10 @@ class ImageService implements ImageServiceInterface
     private function createHashedRelativePath(UploadedFile $uploadedFile): string
     {
         $imageHash = hash_file(self::ALGORYTHM, $uploadedFile->getRealPath());
+        if (!$imageHash) {
+            throw new \RuntimeException('Cannot create Image hash');
+        }
+
         $chunks = array_slice(explode(PHP_EOL, chunk_split($imageHash, self::CHUNK_STRING_LENGTH, PHP_EOL)), self::ARRAY_SLICE_OFFSET, self::ARRAY_SLICE_LENGTH);
 
         return sprintf(self::PATH_TEMPLATE, self::BASE_PATH, implode('/', $chunks));

@@ -2,6 +2,7 @@
 
 namespace App\Import;
 
+use App\Import\Handler\AbstractImportHandler;
 use App\Import\Handler\ImportCategoryHandler;
 use App\Import\Handler\ImportFossilFormFieldHandler;
 use App\Import\Handler\ImportFossilHandler;
@@ -11,6 +12,9 @@ use App\Import\Handler\ImportTagHandler;
 
 class ImportService implements ImportServiceInterface
 {
+    /**
+     * @var array<AbstractImportHandler>
+     */
     private array $handler;
 
     public function __construct(

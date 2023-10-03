@@ -12,11 +12,12 @@ class TagNameConstraintValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly TagRepositoryInterface $tagRepository
-    ) {
-    }
+    ) {}
 
-
-    public function validate(mixed $value, Constraint $constraint)
+    /**
+     * @param string $value
+     */
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof TagNameConstraint) {
             throw new UnexpectedTypeException($constraint, TagNameConstraint::class);
@@ -26,7 +27,7 @@ class TagNameConstraintValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        if (null === $value || '' === $value) {
+        if ('' === trim($value)) {
             return;
         }
 
@@ -43,8 +44,8 @@ class TagNameConstraintValidator extends ConstraintValidator
 
     private function checkTagNameExists(string $tagName): bool
     {
-        foreach ($this->tagRepository->getList(TagRepositoryInterface::GET_ALL) as $savedTag) {
-            if (strtolower($tagName) !== strtolower($savedTag['name'])) {
+        foreach ($this->tagRepository->getList(TagRepositoryInterface::GET_ALL, TagRepositoryInterface::NO_IDS) as $savedTag) {
+            if (strtolower($tagName) !== strtolower($savedTag->getName())) {
                 continue;
             }
 

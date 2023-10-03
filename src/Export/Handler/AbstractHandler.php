@@ -11,9 +11,7 @@ abstract class AbstractHandler
 
     public function __construct(
         private readonly RequestStack $requestStack
-    ) {
-
-    }
+    ) {}
 
     abstract public function getKey(): string;
 
@@ -33,7 +31,8 @@ abstract class AbstractHandler
         $session = $this->requestStack->getSession();
         $sessionFileNameKey = $this->getSessionFileNameKey();
 
-        if ($targetFile = $session->get($sessionFileNameKey, false)) {
+        $targetFile = $session->get($sessionFileNameKey, false);
+        if (is_string($targetFile)) {
             $this->targetFile = $targetFile;
 
             return;
@@ -65,7 +64,12 @@ abstract class AbstractHandler
 
     protected function getStatusFromSession(): ExportStatus
     {
-        return (new ExportStatus($this->getKey()))->fromArray($this->requestStack->getSession()->get($this->getKey(), []));
+        $sessionStatus = $this->requestStack->getSession()->get($this->getKey(), []);
+        if (!is_array($sessionStatus)) {
+            throw new \UnexpectedValueException('Expect array to create new ExportStatus, got ' . gettype($sessionStatus));
+        }
+
+        return (new ExportStatus($this->getKey()))->fromArray($sessionStatus);
     }
 
     private function getSessionFileNameKey(): string

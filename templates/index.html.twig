@@ -53,57 +53,137 @@
 </head>
 <body>
 {% block body %}
-    <a href="{{ url('app_admin') }}" class="btn-secondary">login</a>
+    <div class="container">
+        <div class="container mb-2 pt-2 clearfix">
+            <a href="{{ url('app_admin') }}" class="btn btn-secondary float-end">Administration</a>
+        </div>
+
+
+        <div class="card text-bg-dark gallery-header">
+            {% if titleImage %}
+                <img src="{{ asset(titleImage.relativeImagePath) }}" class="card-img" alt="...">
+            {% else %}
+                <img src="{{ asset('images/default_title_image.png') }}" class="card-img-top" alt="Kein Bild"/>
+            {% endif %}
+            <div class="card-img-overlay">
+                <h5 class="card-title">Fossilien-Galerie</h5>
+                <p class="card-text">Die Fossilien-Galerie bietet eine Reise durch die erstaunliche Vielfalt und
+                    Schönheit vergangener Lebensformen, die in beeindruckenden Bildern präsentiert wird."</p>
+                <div>
+                    <div class="">
+                        <div class="gallery-search bg-dark bg-gradient bg-opacity-25 p-2">
+                            <div class="row m-1">
+                                <div class="col input-group">
+                                    <input class="form-control" name="searchTerm" type="search"
+                                            {#                                       value="{% if filters.searchTerm %}{{ filters.searchTerm }}{% endif %}" #}
+                                           placeholder="Suchbegriff"
+                                           aria-label="Suchbegriff">
+
+                                    <input type="submit" value="Suchen" class="btn btn-primary float-end"/>
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col input-group">
+                                    <select id="categories" name="categories[]" class="form-select"
+                                            data-isTagField="true"
+                                            data-url="{{ url('app_admin_tag_load_available') }}">
+                                        <option value="0">Keine</option>
+                                        {#                                    {% for categorie in filters.availableCategories %} #}
+                                        {#                                        <option value="{{ categorie.id }}"{% if categorie.id in filters.selectedCategories %} selected{% endif %}>{{ categorie.name }}</option> #}
+                                        {#                                    {% endfor %} #}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col input-group">
+                                    <select id="tags" name="tags[]" class="form-select" data-isTagField="true"
+                                            data-url="{{ url('app_admin_tag_load_available') }}">
+                                        <option value="0">Keine</option>
+                                        {#                                    {% for tag in filters.availableTags %} #}
+                                        {#                                        <option value="{{ tag.id }}"{% if tag.id in filters.selectedTags %} selected{% endif %}>{{ tag.name }}</option> #}
+                                        {#                                    {% endfor %} #}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container pt-3">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 r g-4">
+                {% for fossil in fossils %}
+                    <div class="col">
+                        <div class="card h-100">
+                            {% if fossil.images|first %}
+                                <img src="{{ asset(fossil.images|first.relativeThumbnailPath) }}" class="card-img-top"
+                                     alt="{{ fossil.fossilGenus }} {{ fossil.fossilSpecies }}">
+                            {% else %}
+                                <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="Kein Bild"/>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ fossil.fossilGenus }} {{ fossil.fossilSpecies }}</h5>
+                                <p class="card-text">{{ fossil.descriptionAndNotes }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
-    <div class="element-loading-indicator hidden">
+<div class="element-loading-indicator hidden">
+    <span role="status">Loading...</span>
+</div>
 
-        <span role="status">Loading...</span>
+<div class="page-loading-indicator">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
+</div>
 
-    <div class="page-loading-indicator">
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <template id="toast-template-item">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto toast-title"></strong>
+                <button type="button" class="btn-close toast-close-button" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+            <div class="toast-body toast-content">
+
+            </div>
+        </div>
+    </template>
+</div>
+
+<div id="modal-template-container" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button id="closeButton" type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-content"></p>
+                <input type="text" name="confirmInput" class="form-control hidden"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="yesButton btn btn-primary hidden">Ja</button>
+                <button type="button" class="noButton btn btn-secondary hidden" data-dismiss="modal">Nein</button>
+                <button type="button" class="okButton btn btn-primary hidden" data-dismiss="modal">OK</button>
+                <button type="button" class="cancelButton btn btn-secondary hidden" data-dismiss="modal">Abbrechen
+                </button>
             </div>
         </div>
     </div>
-
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <template id="toast-template-item">
-            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                    <strong class="me-auto toast-title"></strong>
-                    <button type="button" class="btn-close toast-close-button" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body toast-content">
-
-                </div>
-            </div>
-        </template>
-    </div>
-
-    <div id="modal-template-container" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button id="closeButton" type="button" class="close btn" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p class="modal-content"></p>
-                    <input type="text" name="confirmInput" class="form-control hidden"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="yesButton btn btn-primary hidden">Ja</button>
-                    <button type="button" class="noButton btn btn-secondary hidden" data-dismiss="modal">Nein</button>
-                    <button type="button" class="okButton btn btn-primary hidden" data-dismiss="modal">OK</button>
-                    <button type="button" class="cancelButton btn btn-secondary hidden" data-dismiss="modal">Abbrechen</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </body>
 </html>

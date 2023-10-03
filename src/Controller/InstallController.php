@@ -62,7 +62,11 @@ class InstallController extends AbstractController
         $installationData = new InstallationData();
         $formBuilder = $this->createFormBuilder($installationData);
         $form = $installationForm->createForm($formBuilder, $this->generateUrl('app_install_execute'));
-        $postData = $request->get($form->getName());
+        $postData = $request->get($form->getName(), []);
+        if(!is_array($postData)) {
+            throw new \UnexpectedValueException('Expect array, got ' . gettype($postData));
+        }
+
         $form->submit($postData);
         $installationData->fromArray($postData);
         $installationData->setAppSecret($installationService->createAppSecret());
@@ -113,7 +117,7 @@ class InstallController extends AbstractController
     }
 
     #[Route('/install/execute/create/entities', name: 'app_install_execute_create_entities')]
-    public function createEntities(FossilFormEntityCreator $fossilFormEntityCreator)
+    public function createEntities(FossilFormEntityCreator $fossilFormEntityCreator): Response
     {
         $fossilFormEntityCreator->createFossilFormEntity();
 

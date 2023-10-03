@@ -15,7 +15,7 @@ class ImagesExportHandler extends AbstractHandler
 
     public function __construct(
         private readonly ImageRepositoryInterface $imageRepository,
-        private readonly RequestStack $requestStack
+        private readonly RequestStack             $requestStack
     ) {
         parent::__construct($this->requestStack);
     }
@@ -53,14 +53,19 @@ class ImagesExportHandler extends AbstractHandler
         foreach ($data as $line) {
             \file_put_contents($this->targetFile, json_encode($line) . PHP_EOL, FILE_APPEND);
 
-            if (is_file($line['absoluteImagePath'])) {
-                $zip->addFile($line['absoluteImagePath'], str_replace('images/', '', $line['relativeImagePath']));
+            $absoluteImagePath = $this->getPath('absoluteImagePath', $line);
+            $relativeImagePath = $this->getPath('relativeImagePath', $line);
+            if (is_file($absoluteImagePath)) {
+                $zip->addFile($absoluteImagePath, str_replace('images/', '', $relativeImagePath));
 
             }
-            if (is_file($line['absoluteThumbnailPath'])) {
-                $zip->addFile($line['absoluteThumbnailPath'], str_replace('images/', '', $line['relativeThumbnailPath']));
-            }
 
+            $absoluteThumbnailPath = $this->getPath('absoluteThumbnailPath', $line);
+            $relativeThumbnailPath = $this->getPath('relativeThumbnailPath', $line);
+
+            if (is_file($absoluteThumbnailPath)) {
+                $zip->addFile($absoluteThumbnailPath, str_replace('images/', '', $relativeThumbnailPath));
+            }
         }
 
         $zip->close();
@@ -76,11 +81,6 @@ class ImagesExportHandler extends AbstractHandler
         return $status;
     }
 
-    private function connectPathAndFileName(string $path, string $fileName): string
-    {
-        return sprintf('%s/%s', $path, $fileName);
-    }
-
     public function getKey(): string
     {
         return 'imageStatus';
@@ -89,5 +89,24 @@ class ImagesExportHandler extends AbstractHandler
     public function getFileName(): string
     {
         return 'Image.csv';
+    }
+
+    private function connectPathAndFileName(string $path, string $fileName): string
+    {
+        return sprintf('%s/%s', $path, $fileName);
+    }
+
+    /**
+     * @param array<string, mixed> $array
+     */
+    private function getPath(string $arrayKey, array $array): string
+    {
+        $value = $array[$arrayKey];
+
+        if (!is_string($value)) {
+            throw new \UnexpectedValueException(sprintf('Expect string for %s got %s', $arrayKey, gettype($value)));
+        }
+
+        return $value;
     }
 }

@@ -14,7 +14,7 @@ class CreateDatabaseTables implements CreateDatabaseTablesInterface
 
     public function createDatabaseTables(
         InstallationData $installationData,
-        PDO $connection
+        PDO              $connection
     ): void {
         $useDatabaseString = sprintf('USE %s;', $installationData->getDatabaseName());
 
@@ -33,6 +33,10 @@ class CreateDatabaseTables implements CreateDatabaseTablesInterface
 
         try {
             $sqlDefaultData = file_get_contents(self::SQL_DEFAULT_DATA_FILE);
+            if (!is_string($sqlDefaultData)) {
+                throw new \UnexpectedValueException(sprintf('SQL file is not a string. FILE: %s', self::SQL_DEFAULT_DATA_FILE));
+            }
+
             $connection->exec($sqlDefaultData);
         } catch (\Exception $exception) {
             if (!str_contains($exception->getMessage(), "Duplicate entry '1' for key 'fossil_form_field.PRIMARY")) {

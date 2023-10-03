@@ -2,21 +2,25 @@
 
 namespace App\Validator\TagName;
 
+use App\Entity\Tag;
 use App\Repository\TagRepositoryInterface;
 
 class TagInfo
 {
-    private ?array $tag;
+    private ?Tag $tag;
 
+    /**
+     * @param array<string,string|int>|null $postedTag
+     */
     public function __construct(
         private readonly TagRepositoryInterface $tagRepository,
         private readonly ?int $requestUrlTagId,
         private readonly ?array $postedTag,
     ) {
-        if ($this->requestUrlTagId) {
+        if (is_int($this->requestUrlTagId)) {
             $this->tag = $this->tagRepository->getById($this->requestUrlTagId);
-        } elseif (array_key_exists('id', $this->postedTag) && !empty($this->postedTag['id'])) {
-            $this->tag = $this->tagRepository->getById($this->postedTag['id']);
+        } elseif (is_array($this->postedTag) && array_key_exists('id', $this->postedTag) && !empty($this->postedTag['id'])) {
+            $this->tag = $this->tagRepository->getById((int) $this->postedTag['id']);
         }
     }
 
@@ -26,8 +30,8 @@ class TagInfo
             return false;
         }
 
-        if (!empty($this->postedTag) && !empty($this->tag)) {
-            if (strtolower(trim($this->tag['name'])) === strtolower(trim($this->postedTag['name']))) {
+        if (!empty($this->postedTag) && $this->tag instanceof Tag) {
+            if (strtolower(trim($this->tag->getName())) === strtolower(trim((string) $this->postedTag['name']))) {
                 return false;
             }
         }

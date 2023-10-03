@@ -8,23 +8,23 @@ class Image extends AbstractStruct
 
     protected ?int $fossilId = null;
 
-    protected ?string $imageName = null;
+    protected string $imageName;
 
-    protected ?string $thumbnailName = null;
+    protected string $thumbnailName;
 
-    protected ?string $mimeType = null;
+    protected string $mimeType;
 
-    protected ?string $relativePath = null;
+    protected string $relativePath;
 
-    protected ?string $relativeImagePath = null;
+    protected string $relativeImagePath;
 
-    protected ?string $relativeThumbnailPath = null;
+    protected string $relativeThumbnailPath;
 
-    protected ?string $absolutePath = null;
+    protected string $absolutePath;
 
-    protected ?string $absoluteImagePath = null;
+    protected string $absoluteImagePath;
 
-    protected ?string $absoluteThumbnailPath = null;
+    protected string $absoluteThumbnailPath;
 
     protected bool $showInGallery = false;
 
@@ -62,177 +62,111 @@ class Image extends AbstractStruct
         $this->fossilId = $fossilId;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getImageName(): ?string
+    public function getImageName(): string
     {
         return $this->imageName;
     }
 
-    /**
-     * @param string|null $imageName
-     */
-    public function setImageName(?string $imageName): void
+    public function setImageName(string $imageName): void
     {
         $this->imageName = $imageName;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getThumbnailName(): ?string
+    public function getThumbnailName(): string
     {
         return $this->thumbnailName;
     }
 
-    /**
-     * @param string|null $thumbnailName
-     */
-    public function setThumbnailName(?string $thumbnailName): void
+    public function setThumbnailName(string $thumbnailName): void
     {
         $this->thumbnailName = $thumbnailName;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getMimeType(): ?string
+    public function getMimeType(): string
     {
         return $this->mimeType;
     }
 
-    /**
-     * @param string|null $mimeType
-     */
-    public function setMimeType(?string $mimeType): void
+    public function setMimeType(string $mimeType): void
     {
         $this->mimeType = $mimeType;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRelativePath(): ?string
+    public function getRelativePath(): string
     {
         return $this->relativePath;
     }
 
-    /**
-     * @param string|null $relativePath
-     */
-    public function setRelativePath(?string $relativePath): void
+    public function setRelativePath(string $relativePath): void
     {
         $this->relativePath = $relativePath;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRelativeImagePath(): ?string
+    public function getRelativeImagePath(): string
     {
         return $this->relativeImagePath;
     }
 
-    /**
-     * @param string|null $relativeImagePath
-     */
-    public function setRelativeImagePath(?string $relativeImagePath): void
+    public function setRelativeImagePath(string $relativeImagePath): void
     {
         $this->relativeImagePath = $relativeImagePath;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRelativeThumbnailPath(): ?string
+    public function getRelativeThumbnailPath(): string
     {
         return $this->relativeThumbnailPath;
     }
 
-    /**
-     * @param string|null $relativeThumbnailPath
-     */
-    public function setRelativeThumbnailPath(?string $relativeThumbnailPath): void
+    public function setRelativeThumbnailPath(string $relativeThumbnailPath): void
     {
         $this->relativeThumbnailPath = $relativeThumbnailPath;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAbsolutePath(): ?string
+    public function getAbsolutePath(): string
     {
         return $this->absolutePath;
     }
 
-    /**
-     * @param string|null $absolutePath
-     */
-    public function setAbsolutePath(?string $absolutePath): void
+    public function setAbsolutePath(string $absolutePath): void
     {
         $this->absolutePath = $absolutePath;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAbsoluteImagePath(): ?string
+    public function getAbsoluteImagePath(): string
     {
         return $this->absoluteImagePath;
     }
 
-    /**
-     * @param string|null $absoluteImagePath
-     */
-    public function setAbsoluteImagePath(?string $absoluteImagePath): void
+    public function setAbsoluteImagePath(string $absoluteImagePath): void
     {
         $this->absoluteImagePath = $absoluteImagePath;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAbsoluteThumbnailPath(): ?string
+    public function getAbsoluteThumbnailPath(): string
     {
         return $this->absoluteThumbnailPath;
     }
 
-    /**
-     * @param string|null $absoluteThumbnailPath
-     */
-    public function setAbsoluteThumbnailPath(?string $absoluteThumbnailPath): void
+    public function setAbsoluteThumbnailPath(string $absoluteThumbnailPath): void
     {
         $this->absoluteThumbnailPath = $absoluteThumbnailPath;
     }
 
-    /**
-     * @return bool
-     */
     public function getShowInGallery(): bool
     {
         return $this->showInGallery;
     }
 
-    /**
-     * @param bool $showInGallery
-     */
     public function setShowInGallery(bool $showInGallery): void
     {
         $this->showInGallery = $showInGallery;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsMainImage(): bool
     {
         return $this->isMainImage;
     }
 
-    /**
-     * @param bool $isMainImage
-     */
     public function setIsMainImage(bool $isMainImage): void
     {
         $this->isMainImage = $isMainImage;

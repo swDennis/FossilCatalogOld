@@ -12,24 +12,25 @@ use Doctrine\DBAL\Query\QueryBuilder;
 class FilterQueryQueryFactory implements FilterQueryFactoryInterface
 {
     /**
-     * @var array<int,FilterQueryHandlerInterface>
+     * @var array<FilterQueryHandlerInterface>
      */
     private array $handlers;
 
     public function __construct(
         private readonly SearchTermQueryFilter $searchTermFilter,
-        private readonly CategoryQueryFilter $categorieFilter,
-        private readonly TagQueryFilterQuery $tagFilter,
-        private readonly FossilFormFieldRepositoryInterface $fossilFormFieldRepository
-    )
-    {
+        private readonly CategoryQueryFilter   $categoryFilter,
+        private readonly TagQueryFilterQuery   $tagFilter
+    ) {
         $this->handlers = [
             'searchTerm' => $this->searchTermFilter,
-            'categories' => $this->categorieFilter,
+            'categories' => $this->categoryFilter,
             'tags' => $this->tagFilter,
         ];
     }
 
+    /**
+     * @param array<string,mixed> $filter
+     */
     public function addFilter(array $filter, QueryBuilder $queryBuilder): void
     {
         foreach ($filter as $filterColumn => $filterValues) {

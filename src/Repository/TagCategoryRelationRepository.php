@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
+use App\Exceptions\IsNotNumericException;
 use Doctrine\DBAL\Connection;
 
 class TagCategoryRelationRepository implements TagCategoryRelationRepositoryInterface
 {
-    public function __construct(public readonly Connection $connection)
-    {
-    }
+    public function __construct(public readonly Connection $connection) {}
+
 
     public function getExportList(int $limit, int $offset): array
     {
@@ -23,6 +23,7 @@ class TagCategoryRelationRepository implements TagCategoryRelationRepositoryInte
 
     public function getColumnCount(): int
     {
+        /** @phpstan-ignore-next-line */
         return $this->connection->createQueryBuilder()
             ->select(['COUNT(id)'])
             ->from(self::TABLE_NAME)
